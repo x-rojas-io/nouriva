@@ -1,0 +1,622 @@
+[
+  {
+    "day": 1,
+    "meals": [
+      {
+        "type": "breakfast",
+        "id": "spring_omelette",
+        "title": "Spring Omelette",
+        "image": null,
+        "ingredients": [
+          "52g sliced mushrooms",
+          "3 eggs",
+          "1 tbsp extra virgin olive oil",
+          "20g grated Parmesan cheese",
+          "40g finely chopped spinach",
+          "Lard, grass-fed butter, or coconut oil",
+          "Salt and pepper",
+          "1 small garlic clove"
+        ],
+        "steps": [
+          "Heat the pan on low heat with butter, lard, or coconut oil and add finely chopped garlic.",
+          "You can beat the eggs in advance or add them directly to the pan.",
+          "Add eggs to the pan and season with salt and pepper.",
+          "Add mushrooms and spinach, season again.",
+          "Cook to your desired consistency and add Parmesan cheese before folding.",
+          "Optional: sprinkle more cheese and a drizzle of olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 2.27
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": false,
+        "tags": [
+          "omelette",
+          "vegetarian",
+          "breakfast",
+          "low-carb"
+        ]
+      },
+      {
+        "type": "lunch",
+        "id": "green_salmon",
+        "title": "Green Salmon",
+        "image": null,
+        "ingredients": [
+          "7\u201310 green or black olives, halved",
+          "40g zucchini, sliced",
+          "50g raw sliced mushrooms",
+          "60g cucumber, sliced",
+          "40g chopped lettuce",
+          "Extra virgin olive oil, salt and pepper",
+          "80g avocado",
+          "1 tbsp cilantro",
+          "Chili pepper (optional)",
+          "Salt and pepper",
+          "1 tbsp sour cream or cream cheese",
+          "Lemon juice (15 ml)",
+          "Water (to adjust sauce texture)",
+          "1 garlic clove",
+          "Fresh salmon with skin (300\u2013340g for women, 350\u2013380g for men)"
+        ],
+        "steps": [
+          "Season salmon with garlic, olive oil, and salt and pepper. Sear at high heat for 3 mins, then cook on low until done.",
+          "Blend avocado, chili, olive oil, cilantro, lemon juice, sour cream, and seasonings into a sauce. Add water to reach desired consistency.",
+          "In a bowl, combine olives, zucchini, mushrooms, cucumber, and lettuce. Dress with olive oil, salt, pepper, and a touch of vinegar.",
+          "Serve salmon topped with green sauce and salad on the side."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 8.69
+        },
+        "prep_time": 15,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "salmon",
+          "lunch",
+          "keto",
+          "high-fat",
+          "batch"
+        ]
+      },
+      {
+        "type": "dinner",
+        "id": "stuffed_eggs",
+        "title": "Stuffed Eggs",
+        "image": null,
+        "ingredients": [
+          "2 boiled eggs",
+          "50g bacon, finely chopped and fried",
+          "30g grated Parmesan or Cheddar cheese",
+          "Extra virgin olive oil",
+          "Salt and pepper"
+        ],
+        "steps": [
+          "Halve the boiled eggs, remove the yolks.",
+          "Mix yolks with bacon, olive oil, salt, and pepper.",
+          "Mash well with a fork until fully combined.",
+          "Carefully fill the egg whites with the mixture.",
+          "Sprinkle cheese on top and drizzle with olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": null
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "eggs",
+          "dinner",
+          "stuffed",
+          "keto"
+        ]
+      }
+    ]
+  },
+  {
+    "day": 2,
+    "meals": [
+      {
+        "type": "breakfast",
+        "id": "spring_omelette",
+        "title": "Spring Omelette",
+        "image": null,
+        "ingredients": [
+          "52g sliced mushrooms",
+          "3 eggs",
+          "1 tbsp extra virgin olive oil",
+          "20g grated Parmesan cheese",
+          "40g finely chopped spinach",
+          "Lard, grass-fed butter, or coconut oil",
+          "Salt and pepper",
+          "1 small garlic clove"
+        ],
+        "steps": [
+          "Heat the pan on low heat with butter, lard, or coconut oil and add finely chopped garlic.",
+          "You can beat the eggs in advance or add them directly to the pan.",
+          "Add eggs to the pan and season with salt and pepper.",
+          "Add mushrooms and spinach, season again.",
+          "Cook to your desired consistency and add Parmesan cheese before folding.",
+          "Optional: sprinkle more cheese and a drizzle of olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 2.27
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": false,
+        "tags": [
+          "omelette",
+          "vegetarian",
+          "breakfast",
+          "low-carb"
+        ]
+      },
+      {
+        "type": "lunch",
+        "id": "green_salmon",
+        "title": "Green Salmon",
+        "image": null,
+        "ingredients": [
+          "7\u201310 green or black olives, halved",
+          "40g zucchini, sliced",
+          "50g raw sliced mushrooms",
+          "60g cucumber, sliced",
+          "40g chopped lettuce",
+          "Extra virgin olive oil, salt and pepper",
+          "80g avocado",
+          "1 tbsp cilantro",
+          "Chili pepper (optional)",
+          "Salt and pepper",
+          "1 tbsp sour cream or cream cheese",
+          "Lemon juice (15 ml)",
+          "Water (to adjust sauce texture)",
+          "1 garlic clove",
+          "Fresh salmon with skin (300\u2013340g for women, 350\u2013380g for men)"
+        ],
+        "steps": [
+          "Season salmon with garlic, olive oil, and salt and pepper. Sear at high heat for 3 mins, then cook on low until done.",
+          "Blend avocado, chili, olive oil, cilantro, lemon juice, sour cream, and seasonings into a sauce. Add water to reach desired consistency.",
+          "In a bowl, combine olives, zucchini, mushrooms, cucumber, and lettuce. Dress with olive oil, salt, pepper, and a touch of vinegar.",
+          "Serve salmon topped with green sauce and salad on the side."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 8.69
+        },
+        "prep_time": 15,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "salmon",
+          "lunch",
+          "keto",
+          "high-fat",
+          "batch"
+        ]
+      },
+      {
+        "type": "dinner",
+        "id": "stuffed_eggs",
+        "title": "Stuffed Eggs",
+        "image": null,
+        "ingredients": [
+          "2 boiled eggs",
+          "50g bacon, finely chopped and fried",
+          "30g grated Parmesan or Cheddar cheese",
+          "Extra virgin olive oil",
+          "Salt and pepper"
+        ],
+        "steps": [
+          "Halve the boiled eggs, remove the yolks.",
+          "Mix yolks with bacon, olive oil, salt, and pepper.",
+          "Mash well with a fork until fully combined.",
+          "Carefully fill the egg whites with the mixture.",
+          "Sprinkle cheese on top and drizzle with olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": null
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "eggs",
+          "dinner",
+          "stuffed",
+          "keto"
+        ]
+      }
+    ]
+  },
+  {
+    "day": 3,
+    "meals": [
+      {
+        "type": "breakfast",
+        "id": "spring_omelette",
+        "title": "Spring Omelette",
+        "image": null,
+        "ingredients": [
+          "52g sliced mushrooms",
+          "3 eggs",
+          "1 tbsp extra virgin olive oil",
+          "20g grated Parmesan cheese",
+          "40g finely chopped spinach",
+          "Lard, grass-fed butter, or coconut oil",
+          "Salt and pepper",
+          "1 small garlic clove"
+        ],
+        "steps": [
+          "Heat the pan on low heat with butter, lard, or coconut oil and add finely chopped garlic.",
+          "You can beat the eggs in advance or add them directly to the pan.",
+          "Add eggs to the pan and season with salt and pepper.",
+          "Add mushrooms and spinach, season again.",
+          "Cook to your desired consistency and add Parmesan cheese before folding.",
+          "Optional: sprinkle more cheese and a drizzle of olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 2.27
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": false,
+        "tags": [
+          "omelette",
+          "vegetarian",
+          "breakfast",
+          "low-carb"
+        ]
+      },
+      {
+        "type": "lunch",
+        "id": "green_salmon",
+        "title": "Green Salmon",
+        "image": null,
+        "ingredients": [
+          "7\u201310 green or black olives, halved",
+          "40g zucchini, sliced",
+          "50g raw sliced mushrooms",
+          "60g cucumber, sliced",
+          "40g chopped lettuce",
+          "Extra virgin olive oil, salt and pepper",
+          "80g avocado",
+          "1 tbsp cilantro",
+          "Chili pepper (optional)",
+          "Salt and pepper",
+          "1 tbsp sour cream or cream cheese",
+          "Lemon juice (15 ml)",
+          "Water (to adjust sauce texture)",
+          "1 garlic clove",
+          "Fresh salmon with skin (300\u2013340g for women, 350\u2013380g for men)"
+        ],
+        "steps": [
+          "Season salmon with garlic, olive oil, and salt and pepper. Sear at high heat for 3 mins, then cook on low until done.",
+          "Blend avocado, chili, olive oil, cilantro, lemon juice, sour cream, and seasonings into a sauce. Add water to reach desired consistency.",
+          "In a bowl, combine olives, zucchini, mushrooms, cucumber, and lettuce. Dress with olive oil, salt, pepper, and a touch of vinegar.",
+          "Serve salmon topped with green sauce and salad on the side."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 8.69
+        },
+        "prep_time": 15,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "salmon",
+          "lunch",
+          "keto",
+          "high-fat",
+          "batch"
+        ]
+      },
+      {
+        "type": "dinner",
+        "id": "stuffed_eggs",
+        "title": "Stuffed Eggs",
+        "image": null,
+        "ingredients": [
+          "2 boiled eggs",
+          "50g bacon, finely chopped and fried",
+          "30g grated Parmesan or Cheddar cheese",
+          "Extra virgin olive oil",
+          "Salt and pepper"
+        ],
+        "steps": [
+          "Halve the boiled eggs, remove the yolks.",
+          "Mix yolks with bacon, olive oil, salt, and pepper.",
+          "Mash well with a fork until fully combined.",
+          "Carefully fill the egg whites with the mixture.",
+          "Sprinkle cheese on top and drizzle with olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": null
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "eggs",
+          "dinner",
+          "stuffed",
+          "keto"
+        ]
+      }
+    ]
+  },
+  {
+    "day": 4,
+    "meals": [
+      {
+        "type": "breakfast",
+        "id": "spring_omelette",
+        "title": "Spring Omelette",
+        "image": null,
+        "ingredients": [
+          "52g sliced mushrooms",
+          "3 eggs",
+          "1 tbsp extra virgin olive oil",
+          "20g grated Parmesan cheese",
+          "40g finely chopped spinach",
+          "Lard, grass-fed butter, or coconut oil",
+          "Salt and pepper",
+          "1 small garlic clove"
+        ],
+        "steps": [
+          "Heat the pan on low heat with butter, lard, or coconut oil and add finely chopped garlic.",
+          "You can beat the eggs in advance or add them directly to the pan.",
+          "Add eggs to the pan and season with salt and pepper.",
+          "Add mushrooms and spinach, season again.",
+          "Cook to your desired consistency and add Parmesan cheese before folding.",
+          "Optional: sprinkle more cheese and a drizzle of olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 2.27
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": false,
+        "tags": [
+          "omelette",
+          "vegetarian",
+          "breakfast",
+          "low-carb"
+        ]
+      },
+      {
+        "type": "lunch",
+        "id": "green_salmon",
+        "title": "Green Salmon",
+        "image": null,
+        "ingredients": [
+          "7\u201310 green or black olives, halved",
+          "40g zucchini, sliced",
+          "50g raw sliced mushrooms",
+          "60g cucumber, sliced",
+          "40g chopped lettuce",
+          "Extra virgin olive oil, salt and pepper",
+          "80g avocado",
+          "1 tbsp cilantro",
+          "Chili pepper (optional)",
+          "Salt and pepper",
+          "1 tbsp sour cream or cream cheese",
+          "Lemon juice (15 ml)",
+          "Water (to adjust sauce texture)",
+          "1 garlic clove",
+          "Fresh salmon with skin (300\u2013340g for women, 350\u2013380g for men)"
+        ],
+        "steps": [
+          "Season salmon with garlic, olive oil, and salt and pepper. Sear at high heat for 3 mins, then cook on low until done.",
+          "Blend avocado, chili, olive oil, cilantro, lemon juice, sour cream, and seasonings into a sauce. Add water to reach desired consistency.",
+          "In a bowl, combine olives, zucchini, mushrooms, cucumber, and lettuce. Dress with olive oil, salt, pepper, and a touch of vinegar.",
+          "Serve salmon topped with green sauce and salad on the side."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 8.69
+        },
+        "prep_time": 15,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "salmon",
+          "lunch",
+          "keto",
+          "high-fat",
+          "batch"
+        ]
+      },
+      {
+        "type": "dinner",
+        "id": "stuffed_eggs",
+        "title": "Stuffed Eggs",
+        "image": null,
+        "ingredients": [
+          "2 boiled eggs",
+          "50g bacon, finely chopped and fried",
+          "30g grated Parmesan or Cheddar cheese",
+          "Extra virgin olive oil",
+          "Salt and pepper"
+        ],
+        "steps": [
+          "Halve the boiled eggs, remove the yolks.",
+          "Mix yolks with bacon, olive oil, salt, and pepper.",
+          "Mash well with a fork until fully combined.",
+          "Carefully fill the egg whites with the mixture.",
+          "Sprinkle cheese on top and drizzle with olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": null
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "eggs",
+          "dinner",
+          "stuffed",
+          "keto"
+        ]
+      }
+    ]
+  },
+  {
+    "day": 5,
+    "meals": [
+      {
+        "type": "breakfast",
+        "id": "spring_omelette",
+        "title": "Spring Omelette",
+        "image": null,
+        "ingredients": [
+          "52g sliced mushrooms",
+          "3 eggs",
+          "1 tbsp extra virgin olive oil",
+          "20g grated Parmesan cheese",
+          "40g finely chopped spinach",
+          "Lard, grass-fed butter, or coconut oil",
+          "Salt and pepper",
+          "1 small garlic clove"
+        ],
+        "steps": [
+          "Heat the pan on low heat with butter, lard, or coconut oil and add finely chopped garlic.",
+          "You can beat the eggs in advance or add them directly to the pan.",
+          "Add eggs to the pan and season with salt and pepper.",
+          "Add mushrooms and spinach, season again.",
+          "Cook to your desired consistency and add Parmesan cheese before folding.",
+          "Optional: sprinkle more cheese and a drizzle of olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 2.27
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": false,
+        "tags": [
+          "omelette",
+          "vegetarian",
+          "breakfast",
+          "low-carb"
+        ]
+      },
+      {
+        "type": "lunch",
+        "id": "green_salmon",
+        "title": "Green Salmon",
+        "image": null,
+        "ingredients": [
+          "7\u201310 green or black olives, halved",
+          "40g zucchini, sliced",
+          "50g raw sliced mushrooms",
+          "60g cucumber, sliced",
+          "40g chopped lettuce",
+          "Extra virgin olive oil, salt and pepper",
+          "80g avocado",
+          "1 tbsp cilantro",
+          "Chili pepper (optional)",
+          "Salt and pepper",
+          "1 tbsp sour cream or cream cheese",
+          "Lemon juice (15 ml)",
+          "Water (to adjust sauce texture)",
+          "1 garlic clove",
+          "Fresh salmon with skin (300\u2013340g for women, 350\u2013380g for men)"
+        ],
+        "steps": [
+          "Season salmon with garlic, olive oil, and salt and pepper. Sear at high heat for 3 mins, then cook on low until done.",
+          "Blend avocado, chili, olive oil, cilantro, lemon juice, sour cream, and seasonings into a sauce. Add water to reach desired consistency.",
+          "In a bowl, combine olives, zucchini, mushrooms, cucumber, and lettuce. Dress with olive oil, salt, pepper, and a touch of vinegar.",
+          "Serve salmon topped with green sauce and salad on the side."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": 8.69
+        },
+        "prep_time": 15,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "salmon",
+          "lunch",
+          "keto",
+          "high-fat",
+          "batch"
+        ]
+      },
+      {
+        "type": "dinner",
+        "id": "stuffed_eggs",
+        "title": "Stuffed Eggs",
+        "image": null,
+        "ingredients": [
+          "2 boiled eggs",
+          "50g bacon, finely chopped and fried",
+          "30g grated Parmesan or Cheddar cheese",
+          "Extra virgin olive oil",
+          "Salt and pepper"
+        ],
+        "steps": [
+          "Halve the boiled eggs, remove the yolks.",
+          "Mix yolks with bacon, olive oil, salt, and pepper.",
+          "Mash well with a fork until fully combined.",
+          "Carefully fill the egg whites with the mixture.",
+          "Sprinkle cheese on top and drizzle with olive oil before serving."
+        ],
+        "macros": {
+          "calories": null,
+          "protein": null,
+          "fat": null,
+          "carbs": null
+        },
+        "prep_time": 5,
+        "cook_time": 10,
+        "batch_friendly": true,
+        "tags": [
+          "eggs",
+          "dinner",
+          "stuffed",
+          "keto"
+        ]
+      }
+    ]
+  }
+]

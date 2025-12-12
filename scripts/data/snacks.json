@@ -1,0 +1,130 @@
+[
+  {
+    "id": "1",
+    "type": "snack",
+    "name": "Spicy Cucumber Bites",
+   "image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929329/cucumberspicy_gqyu8r.jpg",
+  "ingredients":{
+    "Cucumber": { "quantity": 100, "unit": "g" },
+    "Lemon juice": { "quantity": 1, "unit": "each" },
+    "Tajin": { "quantity": 1, "unit": "to taste" },
+    "Salt": { "quantity": 1, "unit": "to taste" },
+    "Pepper": { "quantity": 1, "unit": "to taste" }
+  },
+  "steps": [
+    "1. Add the cucumber slices to a bowl. Pour the lime juice over them, then sprinkle with Tajín (or your preferred chili powder), salt, and pepper.",
+    "2. Mix everything well until evenly coated.",
+    "3. Serve immediately. Enjoy your spicy cucumber bites as a refreshing and zesty snack!"
+  ],
+"tags": ["snack", "cucumber", "vegetarian", "quick", "gluten_free"],
+  "macros": {
+    "net_carbs_g": 0.2
+  }
+},
+{
+  "id": "2",
+  "type": "snack",
+  "name": "Cheese Avocado Sandwich",
+  "image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/cheeseavocado_hmpztg.jpg",
+  "ingredients":{
+    "Cheese": { "quantity": 50, "unit": "g" },
+    "Avocado": { "quantity": 80, "unit": "g" },
+    "Cherry tomatoes": { "quantity": 4, "unit": "each" },
+    "Serrano ham or bacon": { "quantity": 2, "unit": "slice" },
+    "Olive oil": { "quantity": 1, "unit": "to taste" }
+  },
+  "steps": [
+    "1. On a flat plate, place the cheese as the base.",
+    "2. Layer the sliced avocado, serrano ham, and cherry tomatoes on top",
+    "3. Drizzle with olive oil and serve."
+    ],
+  "tags": ["snack", "low_carb", "avocado", "cheese"],
+  "macros": {
+    "net_carbs_g": 1
+  }
+},
+{
+  "id": "3",
+  "type": "snack",
+  "name": "Cherry Tomatoes with Cheese",
+  "image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/cherrytomatoskewer_vvcpxs.jpg",
+  "ingredients":{
+    "Cherry tomatoes": { "quantity": 6, "unit": "units" },
+    "Cheese cubes (mozzarella, feta, or cheddar work well)": { "quantity": 50, "unit": "g" },
+    "Small wooden or bamboo skewers":{ "quantity": 6, "unit": "units" }
+  },
+  "steps": [
+    "1. Assemble the skewers by alternating cherry tomatoes and cheese cubes. Optionally, add a fresh basil leaf between them for extra flavor and presentation.",  
+    "2. Serve cold or at room temperature as a snack or appetizer."
+  ],
+  "macros": {
+    "net_carbs_g": 2.5
+  },
+  "tags": ["snack", "eggs", "cheese"]
+},
+{
+  "id": "4",
+  "type": "snack",
+  "name": "Zucchini Parmesan Crust",
+  "image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/zucinicrus_oq2uum.webp",
+  "ingredients":{
+    "Zucchini": { "quantity": 40, "unit": "g" },
+    "Eggs": { "quantity": 2, "unit": "units" },
+    "Parmesan Cheese": { "quantity": 30, "unit": "g" }
+  },
+  "steps": [
+    "1. Pat the zucchini strips dry thoroughly using a paper towel.",
+    "2. Once fully dry, dip each piece into the beaten egg, then coat it with grated Parmesan until fully covered.",
+    "3. Place in a pan and sauté until golden and crispy on the outside.",
+    "4. Serve hot as a snack or side dish."
+  ],
+    "tags": ["zucchini", "parmesan", "snack"],
+  "macros": {
+    "net_carbs_g": 2.6
+  }
+},
+{
+  "id": "5",
+  "type": "snack",
+  "name": "Parmesan Crackers with Coffee",
+  "image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/ParmesanCracker_qhqolv.jpg",
+  "ingredients":{
+    "Parmesan cheese": { "quantity": 100, "unit": "g" }
+  } ,
+  "steps": [
+    "1. Preheat a small round nonstick skillet over low heat.",
+    "2. Evenly spread the grated Parmesan in a thin layer on the skillet.",  
+    "3. Let the cheese cook slowly. It will start to bubble.",
+    "4. Once bubbling and the bottom is golden, carefully flip the cheese.",  
+    "5. Let the other side crisp up until golden and crunchy.",
+    "6. Remove from the skillet and let cool for 30 seconds.",
+    "7. Serve with: A hot cup of coffee or tea."
+  ],
+    "tags": ["snack", "low_carb", "parmesan"],
+  "macros": {
+    "net_carbs_g": 0
+  }
+},
+{
+  "id": "6",
+  "type": "snack",
+  "name": "Grilled Cheese & Cucumber Bites",
+  "image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/cucumbergrilledcheese_yob0r1.jpg",
+  "ingredients":{
+    "cheese": { "quantity": 60, "unit": "g" },
+    "Cucumber": { "quantity": 80, "unit": "g" },
+    "Olive oil": { "quantity": 1, "unit": "tbsp" },
+    "Salt": { "quantity": 1, "unit": "to taste" },
+    "Pepper": { "quantity": 1, "unit": "to taste" }
+  } ,
+  "steps": [
+    "1. Heat a nonstick skillet over medium-high heat. Add the cheese and cook until golden brown on both sides, about 2–3 minutes per side. Remove and let rest briefly.",
+    "2. In a bowl, toss the cucumber slices with a drizzle of olive oil, a splash of vinegar (optional), and a pinch of salt and pepper.",
+    "3. Plate the grilled cheese and top or serve alongside the marinated cucumber slices for a refreshing contrast in texture and flavor."
+  ],
+  "tags": ["snack", "cheese", "cucumber"],
+  "macros": {
+    "net_carbs_g": 1.89
+  }
+}
+]
