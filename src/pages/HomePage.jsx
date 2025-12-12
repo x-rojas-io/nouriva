@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import RecipeCardSkeleton from "../components/RecipeCardSkeleton";
 
 function HomePage() {
   const [menu, setMenu] = useState([]);
@@ -42,8 +43,21 @@ function HomePage() {
   }, []);
 
   if (loading) return (
-    <div className="text-center mt-10 text-lg text-amber-700">
-      Loading Nouriva meals...
+    <div className="min-h-screen bg-lime-50 text-gray-800 p-8">
+      <h1 className="text-3xl font-bold text-center text-emerald-700 mb-8">
+        Nouriva Club
+      </h1>
+      {/* Skeleton for 2 days */}
+      {[1, 2].map((day) => (
+        <div key={day} className="mb-12">
+          <div className="h-6 w-16 bg-gray-200 rounded mb-4 animate-pulse" /> {/* Day Title Skeleton */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <RecipeCardSkeleton />
+            <RecipeCardSkeleton />
+            <RecipeCardSkeleton />
+          </div>
+        </div>
+      ))}
     </div>
   );
 

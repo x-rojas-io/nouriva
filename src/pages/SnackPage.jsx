@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import RecipeCardSkeleton from "../components/RecipeCardSkeleton";
 
 function SnackPage() {
   const [snacks, setSnacks] = useState([]);
@@ -25,8 +26,15 @@ function SnackPage() {
   }, []);
 
   if (loading) return (
-    <div className="text-center mt-10 text-lg text-amber-700">
-      Loading snacks...
+    <div className="min-h-screen bg-lime-50 px-4 py-8">
+      <h1 className="text-3xl font-bold text-center text-emerald-700 mb-8">
+        Healthy Snacks
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <RecipeCardSkeleton key={i} />
+        ))}
+      </div>
     </div>
   );
 
