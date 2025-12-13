@@ -138,12 +138,28 @@ function RecipeEditor() {
         };
 
         let error;
+        let data;
+
         if (isEditMode) {
-            const res = await supabase.from('recipes').update(payload).eq('id', id);
+            const res = await supabase
+                .from('recipes')
+                .update(payload)
+                .eq('id', id)
+                .select(); // Request return data to confirm write
             error = res.error;
+            data = res.data;
         } else {
-            const res = await supabase.from('recipes').insert([payload]);
+            const res = await supabase
+                .from('recipes')
+                .insert([payload])
+                .select(); // Request return data to confirm write
             error = res.error;
+            data = res.data;
+        }
+
+        // Manual check for silent RLS failures
+        if (!error && (!data || data.length === 0)) {
+            error = { message: "Database rejected the save (likely permission/RLS issue). No data returned." };
         }
 
         setSaving(false);

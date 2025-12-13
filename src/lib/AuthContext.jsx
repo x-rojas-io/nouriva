@@ -36,8 +36,10 @@ export const AuthProvider = ({ children }) => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
             setUser(session?.user ?? null);
             if (session?.user) {
+                console.log("AuthContext: User changed/session refreshed:", session.user.id);
                 await fetchProfile(session.user.id, session.user);
             } else {
+                console.log("AuthContext: No session found (Guest mode)");
                 setProfile(null);
                 setLoading(false);
                 setUserRole('guest');
@@ -76,6 +78,7 @@ export const AuthProvider = ({ children }) => {
                     role = 'premium';
                 }
             }
+            console.log("AuthContext: Role determined:", role);
             setUserRole(role);
             setIsAdmin(role === 'admin');
         } catch (err) {
