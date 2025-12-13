@@ -93,7 +93,12 @@ export const AuthProvider = ({ children }) => {
         isAdmin: userRole === 'admin',
         isPremium: userRole === 'premium' || userRole === 'admin', // Admins get premium features
         loading,
-        signIn: () => supabase.auth.signInWithOAuth({ provider: 'google' }),
+        signIn: () => supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin
+            }
+        }),
         signOut: () => {
             setUserRole('guest');
             supabase.auth.signOut();

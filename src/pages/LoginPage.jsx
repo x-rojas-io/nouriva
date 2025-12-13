@@ -74,7 +74,12 @@ function LoginPage() {
             } else {
                 // Fallback if context is broken
                 alert("Context broken, using direct supabase fallback");
-                const res = await supabase.auth.signInWithOAuth({ provider: 'google' });
+                const res = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
                 error = res.error;
             }
 
