@@ -1,0 +1,1606 @@
+[
+  {
+    "id": "1",
+    "type": "breakfast",
+    "name": "Spring Omelette",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_1_spring-omellete_xgrfgp.jpg",
+    "ingredients": {
+      "Eggs": {
+        "quantity": 3,
+        "unit": "each"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Mushrooms": {
+        "quantity": 52,
+        "unit": "g"
+      },
+      "Spinach": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Parmesan cheese": {
+        "quantity": 20,
+        "unit": "g"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "each"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Begin by heating a non-stick skillet over low heat and adding butter; if you prefer, lard or coconut oil can also enhance the flavor.",
+      "2. Next, stir in the minced garlic and sauté it until it becomes fragrant, allowing the aroma to fill your kitchen.",
+      "3. For a smoother texture, consider beating the eggs in a bowl first; however, for quick preparation, you can pour them directly into the skillet.",
+      "4. Once the eggs are in the skillet, season them generously with salt and pepper to elevate their taste.",
+      "5. Dice the mushrooms and chop the spinach, then distribute them evenly throughout the mixture, adding another light seasoning to bring out the flavors.",
+      "6. Cook the omelette to your desired consistency, whether you prefer it soft and creamy or firm and hearty.",
+      "7. Just before folding, sprinkle a generous amount of grated Parmesan cheese over the top, enriching the dish with a rich, savory finish."
+    ],
+    "tags": [
+      "breakfast",
+      "eggs",
+      "vegetarian",
+      "quick",
+      "gluten_free"
+    ],
+    "macros": {
+      "net_carbs_g": 15.2
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748656068/spring-omellete_xgrfgp.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "2",
+    "type": "lunch",
+    "name": "Green Salmon",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_2_green-salmon_wl6vh6.jpg",
+    "ingredients": {
+      "Salmon": {
+        "quantity": 350,
+        "unit": "g"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Avocado": {
+        "quantity": 80,
+        "unit": "g"
+      },
+      "Cilantro": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Chili": {
+        "quantity": 1,
+        "unit": "tsp"
+      },
+      "Cream cheese": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Lemon juice": {
+        "quantity": 15,
+        "unit": "ml"
+      },
+      "Water": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Olives": {
+        "quantity": 7,
+        "unit": "each"
+      },
+      "Zucchini": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Mushrooms": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Cucumber": {
+        "quantity": 60,
+        "unit": "g"
+      },
+      "Lettuce": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Vinegar": {
+        "quantity": 1,
+        "unit": "tsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Season the salmon fillet with garlic, olive oil, salt, and pepper",
+      "2. Sear it skin-side down in a hot pan for 3 minutes, then reduce the heat and cook until it reaches your desired level of doneness.",
+      "3. To prepare the green sauce, blend avocado, cilantro, garlic, chili (optional), lemon juice, sour cream, salt, and pepper until smooth.",
+      "4. Gradually add water to achieve your desired consistency.",
+      "5. For the salad, combine olives, zucchini, mushrooms, cucumber, and lettuce in a bowl.",
+      "6. Drizzle with olive oil, season with salt and pepper, and toss well. Add vinegar if desired.",
+      "7. Plate the salmon and drizzle with the green sauce.",
+      "8. Serve with the fresh salad on the side."
+    ],
+    "tags": [
+      "lunch",
+      "low_carb",
+      "salmon",
+      "mushroom"
+    ],
+    "macros": {
+      "net_carbs_g": 15.2
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748656023/green-salmon_wl6vh6.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "3",
+    "type": "dinner",
+    "name": "Stuffed Eggs",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_3_eggxellent_fodoch.jpg",
+    "ingredients": {
+      "Eggs": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Bacon": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Parmesan Cheese": {
+        "quantity": 30,
+        "unit": "g"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Hard boil the egs and Cut them in half lengthwise and carefully remove the yolks, placing them in a bowl while setting the whites aside.",
+      "2. Add the bacon cooked and olive oil to the bowl, seasoning with salt and pepper.",
+      "3. Mash and mix the ingredients until they are well combined into a smooth filling.",
+      "4. Gently spoon the filling back into the egg whites.",
+      "5. Top the stuffed eggs with grated cheese and drizzle a bit of olive oil over them before serving."
+    ],
+    "macros": {
+      "net_carbs_g": 2.5
+    },
+    "tags": [
+      "dinner",
+      "eggs",
+      "cheese"
+    ],
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748656049/eggxellent_fodoch.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "4",
+    "type": "breakfast",
+    "name": "Bacon-Wrapped Asparagus",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_4_asparagus-skewer_z7qqm6.jpg",
+    "ingredients": {
+      "Asparagus": {
+        "quantity": 3,
+        "unit": "spears"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Eggs": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Cream cheese": {
+        "quantity": 30,
+        "unit": "g"
+      },
+      "Olive oil": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Butter": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Bacon": {
+        "quantity": 3,
+        "unit": "strips"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Heat a skillet over medium heat and melt the butter. Add the garlic and sauté for a few seconds until fragrant.",
+      "2. Wrap each asparagus spear with a strip of bacon.",
+      "3. Add the bacon-wrapped asparagus to the skillet and cook over low heat until the bacon is crispy and the asparagus is tender.",
+      "4. Spread cream cheese or sour cream on a serving plate as a base.",
+      "5. Place the cooked asparagus on top and sprinkle with chopped boiled eggs.",
+      "6. Drizzle with extra virgin olive oil before serving, if desired."
+    ],
+    "tags": [
+      "asparagus",
+      "bacon",
+      "cream cheese",
+      "breakfast",
+      "savory"
+    ],
+    "macros": {
+      "net_carbs_g": 2.6
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748656059/asparagus-skewer_z7qqm6.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "5",
+    "type": "lunch",
+    "name": "Zucchini Pasta with Meat Sauce",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_5_zucchini-pasta_z315vm.jpg",
+    "ingredients": {
+      "Zucchini": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Parmesan cheese": {
+        "quantity": 30,
+        "unit": "g"
+      },
+      "Ground meat (pork, beef, or chicken)": {
+        "quantity": 200,
+        "unit": "g"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Oregano": {
+        "quantity": 1,
+        "unit": "tsp"
+      },
+      "Rosemary": {
+        "quantity": 1,
+        "unit": "tsp"
+      },
+      "Thyme": {
+        "quantity": 1,
+        "unit": "tsp"
+      },
+      "Basil": {
+        "quantity": 1,
+        "unit": "tsp"
+      },
+      "Parsley": {
+        "quantity": 1,
+        "unit": "tsp"
+      },
+      "White onion": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Tomato": {
+        "quantity": 1,
+        "unit": "each"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Avocado": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Pesto sauce": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Olives": {
+        "quantity": 7,
+        "unit": "units"
+      }
+    },
+    "steps": [
+      "1. Sauté the onion and garlic in butter in a skillet until they are golden brown.",
+      "2. Add the ground meat, season it with salt and pepper, and cook until it is browned.",
+      "3. Stir in the chopped tomato and cook for a few more minutes. Add spices to taste and let the sauce rest.",
+      "4. Meanwhile, prepare the zucchini noodles by blanching or lightly boiling them until they are al dente. Then, briefly sauté them in a hot skillet with butter for extra crunch.",
+      "5. Plate the zucchini noodles and top them with the meat sauce. Sprinkle with Parmesan cheese and pepper.",
+      "6. Serve with a side salad of avocado and olives dressed in pesto."
+    ],
+    "tags": [
+      "ground meat",
+      "low_carb",
+      "pesto",
+      "lunch",
+      "pasta",
+      "zucchini"
+    ],
+    "macros": {
+      "net_carbs_g": 13.12
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748656004/zucchini-pasta_z315vm.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "6",
+    "type": "dinner",
+    "name": "Cheesy Mushrooms with Bacon and Egg",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_6_cheese-mushroom_gbmn7i.jpg",
+    "ingredients": {
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Bacon": {
+        "quantity": 25,
+        "unit": "g"
+      },
+      "Mushrooms": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Cheddar cheese": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Parmesan cheese": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Eggs": {
+        "quantity": 1,
+        "unit": "each"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Preheat the oven to 180°C (356°F).",
+      "2. In a skillet, sauté garlic and bacon in lard or your preferred fat for a few seconds.",
+      "3. Add mushrooms and stir until the mixture is well combined and the mushrooms are slightly cooked.",
+      "4. Transfer the mixture to a buttered oven-safe dish.",
+      "5. Top with grated cheese and chopped boiled eggs.",
+      "6. Bake for a few minutes until the top is golden brown.",
+      "7 . Before serving, drizzle with extra-virgin olive oil."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "dinner",
+      "mushrooms",
+      "bacon",
+      "cheese"
+    ],
+    "macros": {
+      "net_carbs_g": 1.89
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748656038/cheese-mushroom_gbmn7i.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "7",
+    "type": "breakfast",
+    "name": "Eggwich Deluxe: No Bread, No Problem",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_7_Eggwhich_xcfag4.jpg",
+    "ingredients": {
+      "Eggs": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Serrano ham or bacon": {
+        "quantity": 25,
+        "unit": "g"
+      },
+      "Halloumi cheese": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Beat each egg in a separate bowl, adding a pinch of salt and pepper to each.",
+      "2. Heat butter or your chosen fat in a skillet.",
+      "3. Pour the first beaten egg into the pan and cook it like a thin omelet; this will serve as your sandwich 'bun' Set it aside.",
+      "4. Repeat the process with the second egg.",
+      "5. In the same skillet, grill the cheese until it's golden brown on both sides.",
+      "6. Place the grilled cheese and ham (or bacon) on top of one egg 'bun,' then cover it with the second egg.",
+      "7. Serve immediately while hot and melty."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "breakfast",
+      "eggwich",
+      "high_fat",
+      "no_bread"
+    ],
+    "macros": {
+      "net_carbs_g": 1
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739525/Eggwhich_xcfag4.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "8",
+    "type": "lunch",
+    "name": "Color Explosion Chicken: A Salad So Fancy It Deserves a Raise",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_8_chicken-color_lwvton.jpg",
+    "ingredients": {
+      "Chicken leg quarter": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Onion": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Red bell pepper": {
+        "quantity": 15,
+        "unit": "g"
+      },
+      "Tomato": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Bay leaves": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Parsley": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Chicken broth": {
+        "quantity": 1,
+        "unit": "cup"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      }
+    },
+    "steps": [
+      "1. Season the chicken with salt and olive oil.",
+      "2. In a skillet with butter, lard, or coconut oil, sear the chicken on all sides until golden brown. Remove the chicken and set it aside.",
+      "3. In the same pan, sauté the onion, garlic, and bell pepper for 5 minutes. Season with salt and pepper.",
+      "4. Add the chopped tomato and bay leaves. Cook for 10 minutes, stirring occasionally.",
+      "5. Return the chicken to the pan and add the chicken broth. Simmer for 40 minutes or until the chicken is fully cooked.",
+      "6. Before serving, sprinkle with chopped parsley.",
+      "7. In a large bowl, combine raw lettuce, mushrooms, Swiss chard, olives, and bacon.",
+      "8. Season with salt and pepper, add mayonnaise and olive oil, and mix well.",
+      "9. Serve immediately, topping with grated Parmesan cheese."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "lunch",
+      "chicken",
+      "salad",
+      "colorful"
+    ],
+    "macros": {
+      "net_carbs_g": 8.39
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739568/chicken-color_lwvton.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "9",
+    "type": "dinner",
+    "name": "Mexican Confetti Chicken: Like a Party in a Bowl (But Classy)",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_9_mexican-chicken_btanuf.jpg",
+    "ingredients": {
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Parsley": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Lemon juice": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Mayonnaise": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Parmesan cheese": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Chili or hot pepper": {
+        "quantity": 1,
+        "unit": "g"
+      },
+      "Cooked chicken": {
+        "quantity": 80,
+        "unit": "g"
+      },
+      "Olives": {
+        "quantity": 7,
+        "unit": "units"
+      }
+    },
+    "steps": [
+      "1. Mix parsley with olive oil and let it sit for 15 minutes.",
+      "2. In a bowl, combine shredded cooked chicken, chopped chili (if desired), and olives. ",
+      "3. Season with salt and pepper, and mix well.",
+      "4. Add lemon juice, homemade mayonnaise, and the parsley-oil mixture. Stir until fully combined.",
+      "5. Sprinkle with Parmesan cheese and serve immediately."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "dinner",
+      "chicken",
+      "mexican",
+      "quick_meal"
+    ],
+    "macros": {
+      "net_carbs_g": 3
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739544/mexican-chicken_btanuf.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "10",
+    "type": "breakfast",
+    "name": "Stuffed Portobello Bomb: The Mushroom That Ate Breakfast",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_10_portobello_byobdv.jpg",
+    "ingredients": {
+      "Portobello mushrooms": {
+        "quantity": 100,
+        "unit": "g"
+      },
+      "Spinach": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Parmesan cheese": {
+        "quantity": 30,
+        "unit": "g"
+      },
+      "Bacon": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Cheddar cheese": {
+        "quantity": 20,
+        "unit": "g"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Preheat the oven to 180°C (356°F).",
+      "2. Wash the portobello mushroom and pat it dry.",
+      "3. In a large skillet, melt a little butter and place the mushroom gill-side down. Cover the skillet and let the mushroom puff up for 2 minutes.",
+      "4. While the mushroom is cooking, chop the bacon and fry it in another pan with butter until it turns golden brown.",
+      "5. Add spinach to the pan with the bacon, season with salt and pepper, and cook for a few seconds until wilted.",
+      "6. Turn off the heat and stir in the cheddar cheese until melted.",
+      "7. Flip the mushroom over and stuff it with the spinach and bacon mixture.",
+      "8. Grease a baking dish generously with butter, then place the stuffed mushroom inside.",
+      "9. Sprinkle Parmesan cheese on top and bake until golden brown.",
+      "10. Serve immediately."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "breakfast",
+      "stuffed",
+      "mushroom",
+      "vegetable_forward"
+    ],
+    "macros": {
+      "net_carbs_g": 4
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739511/portobello_byobdv.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "11",
+    "type": "lunch",
+    "name": "Trout’s Day Out: Lemon-Garlic Splash with Broccoli Party",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_11_trout_vf6ock.jpg",
+    "ingredients": {
+      "Trout": {
+        "quantity": 250,
+        "unit": "g"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Parsley": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Lime juice": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Broccoli florets": {
+        "quantity": 100,
+        "unit": "g"
+      },
+      "Olive oil": {
+        "quantity": 3,
+        "unit": "tbsp"
+      },
+      "Butter": {
+        "quantity": 2,
+        "unit": "tbsp"
+      },
+      "Parmesan cheese": {
+        "quantity": 20,
+        "unit": "g"
+      },
+      "Avocado": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Begin by using a mortar or masher to crush garlic and fresh parsley into a flavorful paste that will elevate your dish.",
+      "2. Enhance this mixture by adding zesty lime juice and rich olive oil, then mix thoroughly to ensure a harmonious blend of flavors.",
+      "3. Preheat your oven to a perfect 180°C (356°F), or if you're cooking on the stovetop, prepare a flat pan over medium-low heat. While that's warming up, place the opened trout on a baking tray, ready for an infusion of taste.",
+      "4. Generously season the trout with salt and freshly cracked pepper, and pour the vibrant garlic-parsley-lime mixture over it, allowing the flavors to meld beautifully.",
+      "5. Bake the trout for 12 minutes, or cook in the pan until it reaches the ideal doneness—flaky and succulent.",
+      "6. Meanwhile, in a separate pan, sauté the second clove of garlic in butter until it's fragrant and golden.",
+      "7. Add your broccoli to the pan, sprinkling it generously with Parmesan cheese. Cover and allow it to cook until the cheese is perfectly melted and golden-brown, creating an irresistible crust.",
+      "8. Serve the trout immediately, accompanied by the luscious broccoli, a portion of creamy avocado, and a final drizzle of olive oil, creating a stunning and delicious plate that’s sure to impress."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "pescatarian",
+      "lunch",
+      "fish",
+      "vegetable"
+    ],
+    "macros": {
+      "net_carbs_g": 9.58
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739594/trout_vf6ock.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "12",
+    "type": "dinner",
+    "name": "Eggcellent Decision",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_12_eggselent_ypbmcs.jpg",
+    "ingredients": {
+      "Eggs": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Master the art of cooking by transforming your eggs into a delicious tortilla-style omelette.",
+      "2. Don't forget to enhance the flavors with a dash of salt and pepper for the perfect taste!"
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "dinner",
+      "egg"
+    ],
+    "macros": {
+      "net_carbs_g": 0.5
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739656/eggselent_ypbmcs.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "13",
+    "type": "breakfast",
+    "name": "Skewer the Day: Huevipinchos Power Boost",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_13_quail-eggs_dhzhj2.png",
+    "ingredients": {
+      "Quail eggs": {
+        "quantity": 6,
+        "unit": "units"
+      },
+      "Olives": {
+        "quantity": 6,
+        "unit": "units"
+      },
+      "Edam cheese or Dutch cheese": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Cream cheese": {
+        "quantity": 50,
+        "unit": "g"
+      }
+    },
+    "steps": [
+      "1. Start by boiling the quail eggs and peeling them carefully for the perfect bite-sized treat.",
+      "2. Assemble an impressive skewer by alternately threading the quail eggs, succulent olives, and flavorful cheese cubes until the skewer is packed with deliciousness.",
+      "3. In a small bowl, create a delightful dipping sauce by mixing cream cheese, whey cheese, or sour cream to elevate the flavors.",
+      "4. For an added touch of indulgence, drizzle your skewers with a high-quality olive oil just before serving."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "breakfast",
+      "snack",
+      "protein"
+    ],
+    "macros": {
+      "net_carbs_g": 1
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739488/quail-eggs_dhzhj2.png",
+    "is_premium": false
+  },
+  {
+    "id": "14",
+    "type": "lunch",
+    "name": "Flying Wings & Garden Crunch",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_14_chicken-wings_mkkcvc.png",
+    "ingredients": {
+      "Chicken wings": {
+        "quantity": 300,
+        "unit": "g"
+      },
+      "Onion": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Red bell pepper": {
+        "quantity": 25,
+        "unit": "g"
+      },
+      "Crushed tomato": {
+        "quantity": 60,
+        "unit": "g"
+      },
+      "Bay leaves": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Chicken broth or water": {
+        "quantity": 1,
+        "unit": "cup"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Lettuce": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Spinach": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Cherry tomatoes": {
+        "quantity": 3,
+        "unit": "units"
+      },
+      "Red onion": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Olives": {
+        "quantity": 7,
+        "unit": "units"
+      },
+      "Cream cheese": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Mayonnaise": {
+        "quantity": 2,
+        "unit": "tbsp"
+      }
+    },
+    "steps": [
+      "1. Generously season the wings with salt, olive oil, and your favorite spices to enhance their flavor.",
+      "2. Sear the wings in butter until they are beautifully golden brown on both sides, then set them aside.",
+      "3. In the same pan, add a bit more butter and sauté the onion, bell pepper, and garlic, along with salt and pepper, for about 5 minutes until fragrant.",
+      "4. Stir in crushed tomatoes and bay leaves, allowing the mixture to simmer and reduce for 10 minutes to develop rich flavors.",
+      "5. Return the wings to the pan, adding broth or water, and let them simmer for 40 minutes until they're irresistibly tender and cooked through.",
+      "6. For a refreshing salad, toss all the vegetables together and season with salt and pepper to taste.",
+      "7. Elevate your salad by adding sour cream, mayonnaise, and olive oil, then mix thoroughly for a creamy delight.",
+      "8. Serve the wings hot, accompanied by the vibrant, fresh salad for a truly satisfying meal."
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "gluten_free",
+      "paleo",
+      "lunch",
+      "protein"
+    ],
+    "macros": {
+      "net_carbs_g": 12.37
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739611/chicken-wings_mkkcvc.png",
+    "is_premium": false
+  },
+  {
+    "id": "15",
+    "type": "dinner",
+    "name": "Keto Crunch Cookies",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_15_protein-cookies_vty0uu.png",
+    "ingredients": {
+      "Eggs": {
+        "quantity": 2,
+        "unit": "each"
+      },
+      "Ground pork rinds": {
+        "quantity": 20,
+        "unit": "g"
+      },
+      "Parmesan cheese": {
+        "quantity": 30,
+        "unit": "g"
+      },
+      "Cream cheese or sour cream": {
+        "quantity": 10,
+        "unit": "g"
+      }
+    },
+    "steps": [
+      "1. Start by blending all the ingredients in a bowl until they’re thoroughly combined for maximum flavor.",
+      "2. Next, shape the mixture into small balls and gently flatten them into delightful cookie shapes.",
+      "3. Cook them on a hot skillet over low heat, allowing each side to achieve a beautiful golden brown.",
+      "4. Serve these warm, delicious treats immediately with a dollop of cream cheese for an irresistible experience!"
+    ],
+    "tags": [
+      "keto",
+      "low_carb",
+      "snack",
+      "dinner"
+    ],
+    "macros": {
+      "net_carbs_g": 1
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1748739640/protein-cookies_vty0uu.png",
+    "is_premium": false
+  },
+  {
+    "id": "16",
+    "type": "breakfast",
+    "name": "From the Farm",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_16_Infaltable_ymquj8.jpg",
+    "ingredients": {
+      "Eggs": {
+        "quantity": 2,
+        "unit": "each"
+      },
+      "Bacon": {
+        "quantity": 150,
+        "unit": "g"
+      },
+      "Cheese-Halloumi": {
+        "quantity": 100,
+        "unit": "g"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      }
+    },
+    "steps": [
+      "1. Begin by frying the bacon in a skillet until it reaches your desired level of crispiness, allowing the savory aroma to fill your kitchen.",
+      "2. Once the bacon is cooked, remove it from the skillet and set it aside, leaving the delicious bacon fat in the pan to infuse the next step with flavor.",
+      "3. In the same skillet, add a generous amount of butter, allowing it to melt and create a rich base for your eggs.",
+      "4. Crack the eggs directly into the skillet, cooking them to your preferred doneness, whether you like them sunny-side up, over-easy, or scrambled.",
+      "5. While the eggs are cooking, slice the Halloumi cheese into thick pieces and add them to the skillet, allowing them to sear until they develop a golden crust on both sides, enhancing their flavor and texture.",
+      "6. Once the eggs and cheese are ready, plate them alongside the crispy bacon for a hearty breakfast that’s sure to satisfy.",
+      "7. Serve immediately, enjoying the delightful combination of flavors and textures from the farm-fresh ingredients."
+    ],
+    "tags": [
+      "breakfast",
+      "bacon",
+      "eggs",
+      "cheese",
+      "keto",
+      "low_carb",
+      "gluten_free"
+    ],
+    "macros": {
+      "net_carbs_g": 2
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1750715292/Infaltable_ymquj8.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "17",
+    "type": "lunch",
+    "name": "Pesto Fried Chicken",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_17_fried_chicken_kz945l.jpg",
+    "ingredients": {
+      "Chicken tights": {
+        "quantity": 6,
+        "unit": "each"
+      },
+      "Eggs": {
+        "quantity": 2,
+        "unit": "each"
+      },
+      "Cheese-Parmesan": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Cream cheese": {
+        "quantity": 20,
+        "unit": "g"
+      },
+      "Basil leaves": {
+        "quantity": 10,
+        "unit": "each"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Arugula": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Baby spinach": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Cherry tomatoes": {
+        "quantity": 5,
+        "unit": "each"
+      },
+      "Cheese-Feta": {
+        "quantity": 60,
+        "unit": "g"
+      },
+      "Olive oil": {
+        "quantity": 5,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Beat eggs adding a pinch of salt and pepper and in a separate bowl reserve the parmesan cheese.",
+      "2. Dip the chicken thighs, first in the egg mixture and then in the parmesan chesse, to make the chicken crispy, ensure they are well coated.",
+      "3. In a large skillet, melt butter over medium heat and add the chicken thighs, cooking them until they are golden brown and cooked through, about 6-8 minutes per side.",
+      "4. While the chicken is cooking, prepare the pesto by blending basil leaves, cream cheese, and a pinch of salt until smooth.",
+      "5. Once the chicken is cooked, remove it from the skillet and let it rest for a few minutes.",
+      "6. In the same skillet, add butter, the basil leaves and creme cheese, season with salt and pepper, sautéing them briefly until just wilted and reserve",
+      "7. For the Salad mix arugula, baby spinach, and halved cherry tomatoes in a bowl. Crumble feta cheese on top and drizzle with olive oil, tossing gently to combine.",
+      "8. Serve the chicken thighs topped with the pesto sauce and the sautéed greens on the side.",
+      "9. Drizzle with olive oil and season with additional salt and pepper to taste.",
+      "10. Enjoy your flavorful and satisfying pesto fried chicken with a side of vibrant greens!"
+    ],
+    "tags": [
+      "lunch",
+      "chicken",
+      "basil",
+      "low carb"
+    ],
+    "macros": {
+      "net_carbs_g": 2
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1750793312/fried_chicken_kz945l.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "18",
+    "type": "dinner",
+    "name": "Mushroom balls",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_18_button_mushroom_pluyex.jpg",
+    "ingredients": {
+      "Mushrooms-Button": {
+        "quantity": 100,
+        "unit": "g"
+      },
+      "Bacon": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. saute garlic and bacon in a skillet with butter until the bacon is crispy and the garlic is fragrant.",
+      "2. Add the mushrooms to the skillet and cook until they are tender and browned, about 5-7 minutes.",
+      "3. Season with salt and pepper, and mix well.",
+      "3. Remove the skillet from heat and enjoy the mushroom balls as a delicious and savory side dish or appetizer."
+    ],
+    "tags": [
+      "mushroom",
+      "bacon",
+      "snack",
+      "dinner"
+    ],
+    "macros": {
+      "net_carbs_g": 1
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1750795379/button_mushroom_pluyex.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "19",
+    "type": "breakfast",
+    "name": "Beef Short Ribs Soup",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/recipe_19_caldo_de_costilla_b5ijoz.jpg",
+    "ingredients": {
+      "Beef Short Ribs": {
+        "quantity": 400,
+        "unit": "g"
+      },
+      "Onion": {
+        "quantity": 20,
+        "unit": "g"
+      },
+      "Cilantro-Chopped": {
+        "quantity": 10,
+        "unit": "g"
+      },
+      "Garlic": {
+        "quantity": 1,
+        "unit": "clove"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. In a large pot, add the beef short ribs, chopped onion and garlic. and cover them with water.",
+      "2. Bring the water to a boil, then reduce the heat to low and let it simmer for about 1.5 to 2 hours, or until the meat is tender and falls off the bone.",
+      "3. Once the beef is cooked, crack an egg and add it to the pot. It should cook in the broth, similar to eggs Benedict. Cook until it reaches your desired texture.",
+      "4. Let the soup simmer for an additional 5 minutes to allow the flavors to meld together.",
+      "5. Serve the beef short ribs soup hot, garnished with additional cilantro."
+    ],
+    "tags": [
+      "breakfast",
+      "beed",
+      "eggs",
+      "benedict",
+      "keto",
+      "low_carb",
+      "gluten_free"
+    ],
+    "macros": {
+      "net_carbs_g": 2
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1750798126/caldo_de_costilla_b5ijoz.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "20",
+    "type": "lunch",
+    "name": "Cauliflower Pizza",
+    "image": "",
+    "ingredients": {
+      "Cauliflower head": {
+        "quantity": 1500,
+        "unit": "g"
+      },
+      "Eggs": {
+        "quantity": 2,
+        "unit": "each"
+      },
+      "Cheese-Mozarella": {
+        "quantity": 100,
+        "unit": "g"
+      },
+      "Mushrooms-Button": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Chicken breast - Shredded": {
+        "quantity": 1,
+        "unit": "each"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Olive oil": {
+        "quantity": 5,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Cut out the cauliflower stem and core, and break the head into florets",
+      "2. Place the cauliflower in a food processor and pulse until they resemble rice grains.",
+      "3. Cook the cauliflower in a skillet in boiled water over medium heat for about 10 minutes, stirring occasionally.",
+      "4. Drain the cauliflower in a fine mesh strainer and let it cool for a few minutes.",
+      "5. Transfer the cauliflower rice to a clean kitchen towel and squeeze out as much moisture as possible. (This step is crucial to prevent a soggy crust.)",
+      "4. In a bowl, combine the cauliflower, eggs, and shredded mozzarella cheese. Mix well until a dough-like consistency forms.",
+      "6. Make a rounded pizza shape on a baking sheet lined with parchment paper, about 1/2 inch thick.",
+      "7. Bake the crust in a preheated oven at 220°C (428°F) for about 20 minutes, or until it is golden brown and firm.",
+      "8. While the crust is baking, sauté the mushrooms in a skillet with butter until they are tender and browned, about 5-7 minutes.",
+      "9. Once the crust is ready, remove it from the oven and let it cool for a few minutes.",
+      "10. Spread a thin layer of olive oil over the crust, then top it with the sautéed mushrooms and shredded chicken breast.",
+      "11. Sprinkle with additional mozzarella cheese if desired.",
+      "12. Return the pizza to the oven and bake for an additional 10-15 minutes, or until the cheese is melted and bubbly.",
+      "13. Remove from the oven, slice, and serve hot."
+    ],
+    "tags": [
+      "lunch",
+      "chicken",
+      "cauliflower",
+      "mushroom",
+      "pizza:"
+    ],
+    "macros": {
+      "net_carbs_g": 2
+    },
+    "original_image": "",
+    "is_premium": false
+  },
+  {
+    "id": "21",
+    "type": "dinner",
+    "name": "Cheese Bacon Cookies",
+    "image": "",
+    "ingredients": {
+      "Parmesan Cheese": {
+        "quantity": 100,
+        "unit": "g"
+      },
+      "Bacon": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Cream cheese": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Butter": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Cooked the bacon and let it rest.",
+      "2. Chop the bacon and combine with the parmesan cheese and cream cheese. Mix well until a dough-like consistency forms.",
+      "3. Shape the mixture into small balls and gently flatten them into cookie shapes.",
+      "4. Cook them on a hot skillet over low heat, allowing each side to achieve a beautiful golden brown.",
+      "5. Serve these warm, delicious treats immediately with a dollop of cream cheese for an irresistible experience!"
+    ],
+    "tags": [
+      "panceta",
+      "bacon",
+      "cookies",
+      "dinner"
+    ],
+    "macros": {
+      "net_carbs_g": 1
+    },
+    "original_image": "",
+    "is_premium": false
+  },
+  {
+    "id": "1",
+    "type": "snack",
+    "name": "Spicy Cucumber Bites",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/snack_1_cucumberspicy_gqyu8r.jpg",
+    "ingredients": {
+      "Cucumber": {
+        "quantity": 100,
+        "unit": "g"
+      },
+      "Lemon juice": {
+        "quantity": 1,
+        "unit": "each"
+      },
+      "Tajin": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Add the cucumber slices to a bowl. Pour the lime juice over them, then sprinkle with Tajín (or your preferred chili powder), salt, and pepper.",
+      "2. Mix everything well until evenly coated.",
+      "3. Serve immediately. Enjoy your spicy cucumber bites as a refreshing and zesty snack!"
+    ],
+    "tags": [
+      "snack",
+      "cucumber",
+      "vegetarian",
+      "quick",
+      "gluten_free"
+    ],
+    "macros": {
+      "net_carbs_g": 0.2
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929329/cucumberspicy_gqyu8r.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "2",
+    "type": "snack",
+    "name": "Cheese Avocado Sandwich",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/snack_2_cheeseavocado_hmpztg.jpg",
+    "ingredients": {
+      "Cheese": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Avocado": {
+        "quantity": 80,
+        "unit": "g"
+      },
+      "Cherry tomatoes": {
+        "quantity": 4,
+        "unit": "each"
+      },
+      "Serrano ham or bacon": {
+        "quantity": 2,
+        "unit": "slice"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. On a flat plate, place the cheese as the base.",
+      "2. Layer the sliced avocado, serrano ham, and cherry tomatoes on top",
+      "3. Drizzle with olive oil and serve."
+    ],
+    "tags": [
+      "snack",
+      "low_carb",
+      "avocado",
+      "cheese"
+    ],
+    "macros": {
+      "net_carbs_g": 1
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/cheeseavocado_hmpztg.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "3",
+    "type": "snack",
+    "name": "Cherry Tomatoes with Cheese",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/snack_3_cherrytomatoskewer_vvcpxs.jpg",
+    "ingredients": {
+      "Cherry tomatoes": {
+        "quantity": 6,
+        "unit": "units"
+      },
+      "Cheese cubes (mozzarella, feta, or cheddar work well)": {
+        "quantity": 50,
+        "unit": "g"
+      },
+      "Small wooden or bamboo skewers": {
+        "quantity": 6,
+        "unit": "units"
+      }
+    },
+    "steps": [
+      "1. Assemble the skewers by alternating cherry tomatoes and cheese cubes. Optionally, add a fresh basil leaf between them for extra flavor and presentation.",
+      "2. Serve cold or at room temperature as a snack or appetizer."
+    ],
+    "macros": {
+      "net_carbs_g": 2.5
+    },
+    "tags": [
+      "snack",
+      "eggs",
+      "cheese"
+    ],
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/cherrytomatoskewer_vvcpxs.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "4",
+    "type": "snack",
+    "name": "Zucchini Parmesan Crust",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/snack_4_zucinicrus_oq2uum.webp",
+    "ingredients": {
+      "Zucchini": {
+        "quantity": 40,
+        "unit": "g"
+      },
+      "Eggs": {
+        "quantity": 2,
+        "unit": "units"
+      },
+      "Parmesan Cheese": {
+        "quantity": 30,
+        "unit": "g"
+      }
+    },
+    "steps": [
+      "1. Pat the zucchini strips dry thoroughly using a paper towel.",
+      "2. Once fully dry, dip each piece into the beaten egg, then coat it with grated Parmesan until fully covered.",
+      "3. Place in a pan and sauté until golden and crispy on the outside.",
+      "4. Serve hot as a snack or side dish."
+    ],
+    "tags": [
+      "zucchini",
+      "parmesan",
+      "snack"
+    ],
+    "macros": {
+      "net_carbs_g": 2.6
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/zucinicrus_oq2uum.webp",
+    "is_premium": false
+  },
+  {
+    "id": "5",
+    "type": "snack",
+    "name": "Parmesan Crackers with Coffee",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/snack_5_ParmesanCracker_qhqolv.jpg",
+    "ingredients": {
+      "Parmesan cheese": {
+        "quantity": 100,
+        "unit": "g"
+      }
+    },
+    "steps": [
+      "1. Preheat a small round nonstick skillet over low heat.",
+      "2. Evenly spread the grated Parmesan in a thin layer on the skillet.",
+      "3. Let the cheese cook slowly. It will start to bubble.",
+      "4. Once bubbling and the bottom is golden, carefully flip the cheese.",
+      "5. Let the other side crisp up until golden and crunchy.",
+      "6. Remove from the skillet and let cool for 30 seconds.",
+      "7. Serve with: A hot cup of coffee or tea."
+    ],
+    "tags": [
+      "snack",
+      "low_carb",
+      "parmesan"
+    ],
+    "macros": {
+      "net_carbs_g": 0
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/ParmesanCracker_qhqolv.jpg",
+    "is_premium": false
+  },
+  {
+    "id": "6",
+    "type": "snack",
+    "name": "Grilled Cheese & Cucumber Bites",
+    "image": "https://yczlggjrtvnimignprjd.supabase.co/storage/v1/object/public/images/snack_6_cucumbergrilledcheese_yob0r1.jpg",
+    "ingredients": {
+      "cheese": {
+        "quantity": 60,
+        "unit": "g"
+      },
+      "Cucumber": {
+        "quantity": 80,
+        "unit": "g"
+      },
+      "Olive oil": {
+        "quantity": 1,
+        "unit": "tbsp"
+      },
+      "Salt": {
+        "quantity": 1,
+        "unit": "to taste"
+      },
+      "Pepper": {
+        "quantity": 1,
+        "unit": "to taste"
+      }
+    },
+    "steps": [
+      "1. Heat a nonstick skillet over medium-high heat. Add the cheese and cook until golden brown on both sides, about 2–3 minutes per side. Remove and let rest briefly.",
+      "2. In a bowl, toss the cucumber slices with a drizzle of olive oil, a splash of vinegar (optional), and a pinch of salt and pepper.",
+      "3. Plate the grilled cheese and top or serve alongside the marinated cucumber slices for a refreshing contrast in texture and flavor."
+    ],
+    "tags": [
+      "snack",
+      "cheese",
+      "cucumber"
+    ],
+    "macros": {
+      "net_carbs_g": 1.89
+    },
+    "original_image": "https://res.cloudinary.com/dc7ktdccz/image/upload/v1753929328/cucumbergrilledcheese_yob0r1.jpg",
+    "is_premium": false
+  }
+]

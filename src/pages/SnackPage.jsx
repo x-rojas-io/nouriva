@@ -48,7 +48,7 @@ function SnackPage() {
           <div
             key={snack.id}
             className="bg-white shadow rounded overflow-hidden cursor-pointer hover:shadow-md transition"
-            onClick={() => navigate(`/snack/${snack.id}`)}
+            onClick={() => navigate(`/app/snack/${snack.id}`)}
           >
             {snack.image && (
               <img
@@ -58,8 +58,9 @@ function SnackPage() {
               />
             )}
             <div className="p-4">
-              <h2 className="text-xl font-semibold text-emerald-600">
+              <h2 className="text-xl font-semibold text-emerald-600 flex items-center gap-2">
                 {snack.name}
+                {snack.is_premium && <span className="text-xs bg-nouriva-gold text-white px-2 py-1 rounded-full">PRO</span>}
               </h2>
               <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                 {Object.keys(snack.ingredients).length} ingredients
