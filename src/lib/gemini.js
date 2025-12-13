@@ -36,7 +36,7 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 export async function generateRecipeImage(recipeName, ingredients) {
     try {
         // 1. Use Gemini to create a vivid visual description
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
         const prompt = `Describe a delicious, high-quality, professional food photography shot of ${recipeName} made with ${ingredients.slice(0, 3).join(', ')}. Details only, visual style, no filler text. Max 30 words.`;
 
         const result = await model.generateContent(prompt);
