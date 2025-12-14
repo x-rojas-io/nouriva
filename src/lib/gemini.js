@@ -56,3 +56,41 @@ export async function generateRecipeImage(recipeName, ingredients) {
         throw error;
     }
 }
+
+/**
+ * Uses Gemini to interpret a natural language search query.
+ * Returns structured parameters for DB filtering.
+ */
+export async function understandRecipeQuery(userQuery) {
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+        const prompt = `
+            You are a search parser for a recipe app. 
+            User Query: "${userQuery}"
+            
+            Return ONLY a valid JSON object (no markdown, no backticks) with these fields:
+            {
+                "text_search": "keywords found in query (e.g. beef, keto)",
+                "type": "breakfast|lunch|dinner|snack|any",
+                "exclude_ingredients": ["list", "of", "ingredients", "to", "exclude"],
+                "include_ingredients": ["list", "of", "ingredients", "to", "must", "have"]
+            }
+            If the user doesn't specify a type, use "any".
+            If text_search is redundant with type (e.g. "show me breakfast"), text_search can be empty string.
+         `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        // Clean markdown if present
+        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(jsonStr);
+
+    } catch (error) {
+        console.error("Gemini Search Error:", error);
+        // Fallback: simple text search
+        return { text_search: userQuery, type: 'any', exclude_ingredients: [], include_ingredients: [] };
+    }
+}
