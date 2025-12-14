@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { generateRecipeImage } from '../../lib/gemini';
+// import { generateRecipeImage } from '../../lib/gemini'; // Removed/Replaced
+import { optimizeImage } from '../../lib/imageUtils';
 
 function RecipeEditor() {
     const { id } = useParams();
@@ -15,14 +16,20 @@ function RecipeEditor() {
     // Form State
     const [formData, setFormData] = useState({
         name: '',
-        type: 'breakfast', // breakfast, lunch, dinner, snack
-        image: '',
+        type: 'breakfast',
+        image: '', // This will hold the FINAL URL (Supabase or otherwise)
         steps: [''],
-        ingredients: {}, // Stored as JSONB in Supabase. Structure: { "Egg": {quantity: 2, unit: "pcs"}, ... }
+        ingredients: {},
         is_premium: false
     });
 
-    // Helper state for ingredients list (array for better UI handling)
+    // Image Workflow State
+    const [activeTab, setActiveTab] = useState('generate'); // 'generate' | 'upload'
+    const [imagePrompt, setImagePrompt] = useState(''); // Manual prompt
+    const [imageFile, setImageFile] = useState(null); // File to upload on save
+    const [previewUrl, setPreviewUrl] = useState(''); // Valid URL to show the user now
+
+    // Helper state for ingredients list
     const [ingredientList, setIngredientList] = useState([
         { name: '', quantity: '', unit: '' }
     ]);
@@ -40,18 +47,12 @@ function RecipeEditor() {
             alert('Could not load recipe');
             navigate('/admin/recipes');
         } else {
-            setFormData({
-                ...data,
-                // Ensure array valid
-                steps: data.steps || ['']
-            });
-
-            // Convert Ingredients JSON object back to Array for the form
+            setFormData({ ...data, steps: data.steps || [''] });
+            setPreviewUrl(data.image || ''); // Show existing image
+            // Convert Ingredients
             if (data.ingredients) {
                 const list = Object.entries(data.ingredients).map(([name, val]) => ({
-                    name,
-                    quantity: val.quantity,
-                    unit: val.unit
+                    name, quantity: val.quantity, unit: val.unit
                 }));
                 if (list.length === 0) list.push({ name: '', quantity: '', unit: '' });
                 setIngredientList(list);
@@ -68,30 +69,41 @@ function RecipeEditor() {
         }));
     };
 
-    // AI Handler
-    const handleAIGenerate = async () => {
-        if (!formData.name) {
-            alert("Please enter a recipe name first!");
-            return;
-        }
+    // --- Image Workflow Handlers ---
+
+    // 1. Generate (Preview Only)
+    const handleGeneratePreview = async () => {
+        if (!imagePrompt) return alert("Please enter a prompt!");
         setGenerating(true);
         try {
-            // Extract ingredient names
-            const ingredientNames = ingredientList.map(i => i.name).filter(Boolean);
-            const imageUrl = await generateRecipeImage(formData.name, ingredientNames);
+            // Using Pollinations for volatile preview
+            const encodedPrompt = encodeURIComponent(imagePrompt + " realistic, 4k, food photography, cinematic lighting");
+            const tempUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true`;
 
-            setFormData(prev => ({
-                ...prev,
-                image: imageUrl
-            }));
+            // Fetch it to a blob immediately so we can treat it like an upload
+            const res = await fetch(tempUrl);
+            const blob = await res.blob();
+
+            setPreviewUrl(URL.createObjectURL(blob)); // Show it
+            setImageFile(blob); // Queue it for upload
         } catch (err) {
-            alert("Failed to generate image. Check console.");
+            console.error(err);
+            alert("Generation failed");
         } finally {
             setGenerating(false);
         }
     };
 
-    // --- Step Handlers ---
+    // 2. Upload (Preview Only)
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPreviewUrl(URL.createObjectURL(file));
+            setImageFile(file);
+        }
+    };
+
+    // --- Step/Ingredient Handlers (Same as before) ---
     const handleStepChange = (index, value) => {
         const newSteps = [...formData.steps];
         newSteps[index] = value;
@@ -102,8 +114,6 @@ function RecipeEditor() {
         const newSteps = formData.steps.filter((_, i) => i !== index);
         setFormData(prev => ({ ...prev, steps: newSteps }));
     };
-
-    // --- Ingredient Handlers ---
     const handleIngredientChange = (index, field, value) => {
         const newList = [...ingredientList];
         newList[index][field] = value;
@@ -112,70 +122,84 @@ function RecipeEditor() {
     const addIngredient = () => setIngredientList(prev => [...prev, { name: '', quantity: '', unit: '' }]);
     const removeIngredient = (index) => setIngredientList(prev => prev.filter((_, i) => i !== index));
 
-    // --- Save ---
+    // --- SAVE (Atomic: Optimize -> Upload -> Save DB) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
 
-        // Convert Ingredient Array -> Object
-        const ingredientsObj = {};
-        ingredientList.forEach(ing => {
-            if (ing.name.trim()) {
-                ingredientsObj[ing.name] = {
-                    quantity: ing.quantity,
-                    unit: ing.unit
-                };
+        let finalImageUrl = formData.image;
+
+        try {
+            // 1. Handle Image Persistence (If new image)
+            if (imageFile) {
+                // Optimize
+                const optimizedBlob = await optimizeImage(imageFile);
+
+                // Upload
+                const fileName = `recipe_${Date.now()}.jpg`;
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('images')
+                    .upload(fileName, optimizedBlob, { contentType: 'image/jpeg', upsert: true });
+
+                if (uploadError) {
+                    throw uploadError;
+                }
+
+                // Get Public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('images')
+                    .getPublicUrl(fileName);
+
+                finalImageUrl = publicUrl;
             }
-        });
 
-        const payload = {
-            name: formData.name,
-            type: formData.type,
-            image: formData.image,
-            is_premium: formData.is_premium,
-            steps: formData.steps.filter(s => s.trim() !== ''),
-            ingredients: ingredientsObj
-        };
+            // 2. Prepare Payload
+            const ingredientsObj = {};
+            ingredientList.forEach(ing => {
+                if (ing.name.trim()) {
+                    ingredientsObj[ing.name] = { quantity: ing.quantity, unit: ing.unit };
+                }
+            });
 
-        let error;
-        let data;
+            const payload = {
+                name: formData.name,
+                type: formData.type,
+                image: finalImageUrl, // Ensure we save the Supabase URL
+                is_premium: formData.is_premium,
+                steps: formData.steps.filter(s => s.trim() !== ''),
+                ingredients: ingredientsObj
+            };
 
-        if (isEditMode) {
-            const res = await supabase
-                .from('recipes')
-                .update(payload)
-                .eq('id', id)
-                .select(); // Request return data to confirm write
-            error = res.error;
-            data = res.data;
-        } else {
-            const res = await supabase
-                .from('recipes')
-                .insert([payload])
-                .select(); // Request return data to confirm write
-            error = res.error;
-            data = res.data;
-        }
+            // 3. Save to DB
+            let error, data;
+            if (isEditMode) {
+                const res = await supabase.from('recipes').update(payload).eq('id', id).select();
+                error = res.error; data = res.data;
+            } else {
+                const res = await supabase.from('recipes').insert([payload]).select();
+                error = res.error; data = res.data;
+            }
 
-        // Manual check for silent RLS failures
-        if (!error && (!data || data.length === 0)) {
-            error = { message: "Database rejected the save (likely permission/RLS issue). No data returned." };
-        }
+            if (!error && (!data || data.length === 0)) {
+                throw new Error("Database rejected save (RLS).");
+            }
+            if (error) throw error;
 
-        setSaving(false);
-        if (error) {
-            console.error(error);
-            alert("Error saving: " + error.message);
-        } else {
             navigate('/admin/recipes');
+
+        } catch (err) {
+            console.error("Save Error:", err);
+            alert("Error saving: " + err.message);
+        } finally {
+            setSaving(false);
         }
     };
 
     if (loading) return <div>Loading...</div>;
 
     return (
-        <div className="p-8 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">{isEditMode ? 'Edit Recipe' : 'New Recipe'}</h1>
+        <div className="p-4 md:p-8 max-w-4xl mx-auto">
+            <h1 className="text-3xl font-bold text-emerald-800 mb-8">{isEditMode ? 'Edit Recipe' : 'New Recipe'}</h1>
 
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow space-y-6">
 
@@ -183,22 +207,11 @@ function RecipeEditor() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label className="block text-sm font-bold text-gray-700 mb-1">Recipe Name</label>
-                        <input
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="w-full border p-2 rounded"
-                            required
-                        />
+                        <input name="name" value={formData.name} onChange={handleChange} className="w-full border p-2 rounded" required />
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-gray-700 mb-1">Type</label>
-                        <select
-                            name="type"
-                            value={formData.type}
-                            onChange={handleChange}
-                            className="w-full border p-2 rounded"
-                        >
+                        <select name="type" value={formData.type} onChange={handleChange} className="w-full border p-2 rounded">
                             <option value="breakfast">Breakfast</option>
                             <option value="lunch">Lunch</option>
                             <option value="dinner">Dinner</option>
@@ -207,76 +220,85 @@ function RecipeEditor() {
                     </div>
                 </div>
 
-                {/* Image (Multi-modal) */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Image URL</label>
-                    <div className="flex gap-2">
-                        <input
-                            name="image"
-                            value={formData.image}
-                            onChange={handleChange}
-                            className="w-full border p-2 rounded"
-                            placeholder="https://..."
-                        />
+                {/* New Image Workflow */}
+                <div className="border rounded p-4 bg-gray-50">
+                    <label className="block text-sm font-bold text-gray-700 mb-3">Recipe Image</label>
+
+                    {/* Tabs */}
+                    <div className="flex gap-4 border-b mb-4">
                         <button
                             type="button"
-                            onClick={handleAIGenerate}
-                            disabled={generating}
-                            className={`text-white px-4 rounded whitespace-nowrap transition flex items-center gap-2 ${generating ? 'bg-gray-400' : 'bg-purple-600 hover:bg-purple-700'}`}
+                            onClick={() => setActiveTab('generate')}
+                            className={`pb-2 px-1 text-sm font-bold border-b-2 transition ${activeTab === 'generate' ? 'border-nouriva-green text-nouriva-green' : 'border-transparent text-gray-500'}`}
                         >
-                            {generating ? (
-                                <>
-                                    <span className="animate-spin">✨</span> Generating...
-                                </>
-                            ) : (
-                                <>✨ AI Generate</>
-                            )}
+                            ✨ Generate (AI)
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('upload')}
+                            className={`pb-2 px-1 text-sm font-bold border-b-2 transition ${activeTab === 'upload' ? 'border-nouriva-green text-nouriva-green' : 'border-transparent text-gray-500'}`}
+                        >
+                            📁 Upload File
                         </button>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                        Powered by Google Gemini. It will generate a prompt and create an image.
-                    </p>
-                    {formData.image && <img src={formData.image} alt="Preview" className="mt-2 h-64 w-full object-cover rounded shadow" />}
+
+                    {/* Tab Content */}
+                    <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex-1 space-y-3">
+                            {activeTab === 'generate' ? (
+                                <div>
+                                    <textarea
+                                        placeholder="Describe the image (e.g. 'A stack of fluffy pancakes with berries, professional food photography')..."
+                                        value={imagePrompt}
+                                        onChange={(e) => setImagePrompt(e.target.value)}
+                                        className="w-full border p-2 rounded h-24 text-sm"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleGeneratePreview}
+                                        disabled={generating}
+                                        className="mt-2 bg-purple-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-purple-700 w-full md:w-auto"
+                                    >
+                                        {generating ? 'Generating...' : 'Run Prompt'}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="p-4 border-2 border-dashed rounded text-center">
+                                    <input type="file" accept="image/*" onChange={handleFileUpload} />
+                                </div>
+                            )}
+                            <p className="text-xs text-gray-500 italic">
+                                Note: Image will be optimized and saved to database only when you click "Save Recipe".
+                            </p>
+                        </div>
+
+                        {/* Preview Area */}
+                        <div className="w-full md:w-48 h-48 bg-gray-200 rounded overflow-hidden flex items-center justify-center border">
+                            {previewUrl ? (
+                                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                            ) : (
+                                <span className="text-gray-400 text-sm">No Preview</span>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
-                {/* Premium Toggle */}
+                {/* Premium */}
                 <div className="flex items-center space-x-2">
-                    <input
-                        type="checkbox"
-                        name="is_premium"
-                        id="is_premium"
-                        checked={formData.is_premium}
-                        onChange={handleChange}
-                        className="h-5 w-5 text-nouriva-green"
-                    />
+                    <input type="checkbox" name="is_premium" id="is_premium" checked={formData.is_premium} onChange={handleChange} className="h-5 w-5 text-nouriva-green" />
                     <label htmlFor="is_premium" className="font-bold text-gray-700">Premium (Subscribers Only)</label>
                 </div>
 
                 <hr />
 
-                {/* Ingredients */}
+                {/* Ingredients (Simplified View for brevity in this replace) */}
                 <div>
                     <h3 className="text-lg font-bold text-gray-800 mb-2">Ingredients</h3>
                     {ingredientList.map((ing, i) => (
                         <div key={i} className="flex gap-2 mb-2">
-                            <input
-                                placeholder="Qty (e.g 2)"
-                                value={ing.quantity}
-                                onChange={(e) => handleIngredientChange(i, 'quantity', e.target.value)}
-                                className="w-20 border p-2 rounded"
-                            />
-                            <input
-                                placeholder="Unit (e.g pcs)"
-                                value={ing.unit}
-                                onChange={(e) => handleIngredientChange(i, 'unit', e.target.value)}
-                                className="w-24 border p-2 rounded"
-                            />
-                            <input
-                                placeholder="Name (e.g Eggs)"
-                                value={ing.name}
-                                onChange={(e) => handleIngredientChange(i, 'name', e.target.value)}
-                                className="flex-1 border p-2 rounded"
-                            />
+                            <input placeholder="Qty" value={ing.quantity} onChange={(e) => handleIngredientChange(i, 'quantity', e.target.value)} className="w-20 border p-2 rounded" />
+                            <input placeholder="Unit" value={ing.unit} onChange={(e) => handleIngredientChange(i, 'unit', e.target.value)} className="w-24 border p-2 rounded" />
+                            <input placeholder="Name" value={ing.name} onChange={(e) => handleIngredientChange(i, 'name', e.target.value)} className="flex-1 border p-2 rounded" />
                             <button type="button" onClick={() => removeIngredient(i)} className="text-red-500 font-bold px-2">X</button>
                         </div>
                     ))}
@@ -291,11 +313,7 @@ function RecipeEditor() {
                     {formData.steps.map((step, i) => (
                         <div key={i} className="flex gap-2 mb-2">
                             <span className="mt-2 text-gray-400 font-bold">{i + 1}.</span>
-                            <textarea
-                                value={step}
-                                onChange={(e) => handleStepChange(i, e.target.value)}
-                                className="flex-1 border p-2 rounded h-20"
-                            />
+                            <textarea value={step} onChange={(e) => handleStepChange(i, e.target.value)} className="flex-1 border p-2 rounded h-20" />
                             <button type="button" onClick={() => removeStep(i)} className="text-red-500 font-bold px-2 h-10">X</button>
                         </div>
                     ))}
@@ -305,15 +323,10 @@ function RecipeEditor() {
                 {/* Actions */}
                 <div className="flex justify-end gap-4 pt-4">
                     <button type="button" onClick={() => navigate('/admin/recipes')} className="text-gray-600 px-4 py-2 hover:underline">Cancel</button>
-                    <button
-                        type="submit"
-                        disabled={saving}
-                        className="bg-nouriva-green text-white px-8 py-3 rounded font-bold hover:bg-emerald-800 transition"
-                    >
-                        {saving ? 'Saving...' : 'Save Recipe'}
+                    <button type="submit" disabled={saving} className="bg-nouriva-green text-white px-8 py-3 rounded font-bold hover:bg-emerald-800 transition">
+                        {saving ? 'Saving & Uploading...' : 'Save Recipe'}
                     </button>
                 </div>
-
             </form>
         </div>
     );

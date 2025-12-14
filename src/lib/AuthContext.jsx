@@ -52,8 +52,9 @@ export const AuthProvider = ({ children }) => {
 
     const fetchProfile = async (userId, currentUser) => {
         try {
+            // 15s timeout to allow for Supabase cold starts, but prevent infinite loading
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Profile fetch timed out (5s)')), 5000)
+                setTimeout(() => reject(new Error('Profile fetch timed out (15s)')), 15000)
             );
 
             const dbPromise = supabase
