@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { optimizeImage } from '../lib/imageUtils';
+import { useToast } from '../lib/ToastContext';
 
 function ImageBackupButton({ recipe, onBackupComplete }) {
     const [loading, setLoading] = useState(false);
+    const { toast } = useToast();
 
     // Only show if it's a Pollinations/External URL and NOT already Supabase
     const isExternal = recipe.image && recipe.image.includes('pollinations.ai');
@@ -51,11 +54,11 @@ function ImageBackupButton({ recipe, onBackupComplete }) {
 
             // Success
             if (onBackupComplete) onBackupComplete(recipe.id, publicUrl);
-            alert("Image backed up and optimized successfully!");
+            toast.success("Image backed up and optimized successfully!");
 
         } catch (err) {
             console.error("Backup failed:", err);
-            alert("Backup failed. Check console.");
+            toast.error("Backup failed. Check console.");
         } finally {
             setLoading(false);
         }
@@ -75,50 +78,6 @@ function ImageBackupButton({ recipe, onBackupComplete }) {
             )}
         </button>
     );
-}
-
-// Logic to resize/compress
-async function optimizeImage(originalBlob) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        const url = URL.createObjectURL(originalBlob);
-
-        img.onload = () => {
-            // Define Max Dimensions
-            const MAX_WIDTH = 1024;
-            const MAX_HEIGHT = 1024;
-            let width = img.width;
-            let height = img.height;
-
-            // Calculate new dimensions
-            if (width > height) {
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
-            } else {
-                if (height > MAX_HEIGHT) {
-                    width *= MAX_HEIGHT / height;
-                    height = MAX_HEIGHT;
-                }
-            }
-
-            // Draw to Canvas
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Export as JPEG with compression
-            canvas.toBlob((blob) => {
-                URL.revokeObjectURL(url);
-                resolve(blob);
-            }, 'image/jpeg', 0.8); // 0.8 Quality (Good balance)
-        };
-
-        img.src = url;
-    });
 }
 
 export default ImageBackupButton;

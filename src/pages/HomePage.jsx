@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/AuthContext";
+import { useToast } from "../lib/ToastContext";
 import { understandRecipeQuery } from "../lib/gemini";
 import SmartSearchBar from "../components/SmartSearchBar";
 import RecipeCardSkeleton from "../components/RecipeCardSkeleton";
 
 function HomePage() {
   const { user, profile, isPremium } = useAuth();
+  const { toast } = useToast();
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -105,7 +107,7 @@ function HomePage() {
 
     } catch (err) {
       console.error("Search failed:", err);
-      alert("Search failed. See console.");
+      toast.error("Search failed. See console.");
     } finally {
       setIsSearching(false);
     }

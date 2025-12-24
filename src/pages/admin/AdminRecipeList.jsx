@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import ImageBackupButton from '../../components/ImageBackupButton';
+import { useToast } from '../../lib/ToastContext';
 
 function AdminRecipeList() {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { toast } = useToast();
 
     useEffect(() => {
         fetchRecipes();
@@ -27,8 +29,9 @@ function AdminRecipeList() {
 
         const { error } = await supabase.from('recipes').delete().eq('id', id);
         if (error) {
-            alert("Error deleting recipe");
+            toast.error("Error deleting recipe");
         } else {
+            toast.success("Recipe deleted");
             setRecipes(recipes.filter(r => r.id !== id));
         }
     }

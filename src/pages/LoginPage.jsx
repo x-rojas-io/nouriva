@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/AuthContext';
 import { supabase } from '../lib/supabase';
+import { useToast } from '../lib/ToastContext';
 
 function LoginPage() {
     const auth = useAuth() || {};
     const { user, isAdmin, signIn } = auth;
+    const toast = useToast();
 
     useEffect(() => {
         // Debug: Check if signIn exists
@@ -17,7 +19,8 @@ function LoginPage() {
 
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
+    const [otpLoading, setOtpLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [showVerify, setShowVerify] = useState(false);
     const [otp, setOtp] = useState('');
@@ -35,36 +38,61 @@ function LoginPage() {
 
     const handleSendOtp = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        const { error } = await supabase.auth.signInWithOtp({ email });
-        if (error) {
-            alert(error.message);
-        } else {
-            setMessage('Check your email for the code!');
-            setShowVerify(true);
+        setOtpLoading(true);
+        try {
+            const res = await supabase.auth.signInWithOtp({ email });
+            console.log("OTP Response:", res);
+            const error = res?.error;
+
+            if (error) {
+                toast.error(error.message);
+            } else if (res?.data) {
+                toast.success('Check your email for the code!');
+                setShowVerify(true);
+            } else {
+                // Fallback if both are missing but no error thrown
+                // usage of 429 might result in null data/error sometimes?
+                console.warn("Unexpected response structure:", res);
+                if (res === undefined) {
+                    throw new Error("Supabase client returned no response (network blocked?)");
+                }
+                toast.success('Check your email for the code!');
+                setShowVerify(true);
+            }
+        } catch (err) {
+            console.error("OTP Error:", err);
+            toast.error("An unexpected error occurred: " + (err.message || String(err)));
+        } finally {
+            setOtpLoading(false);
         }
-        setLoading(false);
     };
 
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        const { data, error } = await supabase.auth.verifyOtp({
-            email,
-            token: otp,
-            type: 'email'
-        });
+        setOtpLoading(true);
+        try {
+            const res = await supabase.auth.verifyOtp({
+                email,
+                token: otp,
+                type: 'email'
+            });
+            const error = res?.error;
 
-        if (error) {
-            alert(error.message);
-            setLoading(false);
-        } else {
-            // Success! AuthContext will pick up the session change.
+            if (error) {
+                toast.error(error.message);
+            } else {
+                // Success! AuthContext will pick up the session change.
+            }
+        } catch (err) {
+            console.error("Verify Error:", err);
+            toast.error("Verification failed: " + (err.message || String(err)));
+        } finally {
+            setOtpLoading(false);
         }
     };
 
     const handleGoogleLogin = async () => {
-        setLoading(true);
+        setGoogleLoading(true);
         try {
             console.log("Attempting Google Login. signIn fn:", signIn);
             let error;
@@ -73,7 +101,7 @@ function LoginPage() {
                 error = res.error;
             } else {
                 // Fallback if context is broken
-                alert("Context broken, using direct supabase fallback");
+                toast.error("Context broken, using direct supabase fallback");
                 const res = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
@@ -83,11 +111,11 @@ function LoginPage() {
                 error = res.error;
             }
 
-            if (error) alert("Google Login Error: " + error.message);
+            if (error) toast.error("Google Login Error: " + error.message);
         } catch (err) {
-            alert("Unexpected Error: " + err.message);
+            toast.error("Unexpected Error: " + err.message);
         }
-        setLoading(false);
+        setGoogleLoading(false);
     };
 
     return (
@@ -102,12 +130,13 @@ function LoginPage() {
                         {/* ... Google & Divider ... */}
                         {/* Google Login */}
                         <button
+                            type="button"
                             onClick={handleGoogleLogin}
-                            disabled={loading}
+                            disabled={googleLoading || otpLoading}
                             className="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-50 transition flex justify-center items-center gap-2 mb-4 disabled:opacity-50"
                         >
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
-                            {loading ? 'Connecting...' : 'Sign in with Google'}
+                            {googleLoading ? 'Connecting...' : 'Sign in with Google'}
                         </button>
 
                         <div className="relative my-6">
@@ -131,10 +160,10 @@ function LoginPage() {
                             />
                             <button
                                 type="submit"
-                                disabled={loading}
+                                disabled={googleLoading || otpLoading}
                                 className="w-full bg-nouriva-green text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-800 transition disabled:opacity-50"
                             >
-                                {loading ? 'Sending...' : 'Send Login Code'}
+                                {otpLoading ? 'Sending...' : 'Send Login Code'}
                             </button>
                         </form>
                     </>
@@ -157,10 +186,10 @@ function LoginPage() {
                         />
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={otpLoading}
                             className="w-full bg-nouriva-green text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-800 transition disabled:opacity-50"
                         >
-                            {loading ? 'Verifying...' : 'Verify Code'}
+                            {otpLoading ? 'Verifying...' : 'Verify Code'}
                         </button>
                     </form>
                 )}

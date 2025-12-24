@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-// import { generateRecipeImage } from '../../lib/gemini'; // Removed/Replaced
+
 import { optimizeImage } from '../../lib/imageUtils';
+import { useToast } from '../../lib/ToastContext';
 
 function RecipeEditor() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { toast } = useToast();
     const isEditMode = !!id;
 
     const [loading, setLoading] = useState(isEditMode);
@@ -44,7 +46,7 @@ function RecipeEditor() {
         const { data, error } = await supabase.from('recipes').select('*').eq('id', id).single();
         if (error) {
             console.error(error);
-            alert('Could not load recipe');
+            toast.error('Could not load recipe');
             navigate('/admin/recipes');
         } else {
             setFormData({ ...data, steps: data.steps || [''] });
@@ -73,7 +75,7 @@ function RecipeEditor() {
 
     // 1. Generate (Preview Only)
     const handleGeneratePreview = async () => {
-        if (!imagePrompt) return alert("Please enter a prompt!");
+        if (!imagePrompt) return toast.error("Please enter a prompt!");
         setGenerating(true);
         try {
             // Using Pollinations for volatile preview
@@ -88,7 +90,7 @@ function RecipeEditor() {
             setImageFile(blob); // Queue it for upload
         } catch (err) {
             console.error(err);
-            alert("Generation failed");
+            toast.error("Generation failed");
         } finally {
             setGenerating(false);
         }
@@ -185,11 +187,14 @@ function RecipeEditor() {
             }
             if (error) throw error;
 
+            if (error) throw error;
+
+            toast.success('Recipe saved successfully!');
             navigate('/admin/recipes');
 
         } catch (err) {
             console.error("Save Error:", err);
-            alert("Error saving: " + err.message);
+            toast.error("Error saving: " + err.message);
         } finally {
             setSaving(false);
         }
