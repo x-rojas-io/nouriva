@@ -3,18 +3,28 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../lib/AuthContext';
 
 function ProtectedRoute({ requireAdmin = false }) {
-    const { user, isAdmin, loading } = useAuth();
+    const { user, isAdmin, loading, profileLoading } = useAuth();
 
+    // 1. Wait for session to be determined (fast)
     if (loading) return <div>Loading...</div>;
 
-    // 1. Must be logged in
+    // 2. Must be logged in
     if (!user) {
         return <Navigate to="/login" replace />;
     }
 
-    // 2. If Admin required, must be Admin
-    if (requireAdmin && !isAdmin) {
-        return <Navigate to="/app/home" replace />;
+    // 3. If Admin required, must wait for profile to load (slow path)
+    if (requireAdmin) {
+        if (profileLoading) {
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-white">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-nouriva-green"></div>
+                </div>
+            );
+        }
+        if (!isAdmin) {
+            return <Navigate to="/app/home" replace />;
+        }
     }
 
     return <Outlet />;

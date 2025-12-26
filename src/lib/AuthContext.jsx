@@ -8,42 +8,54 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [sessionLoading, setSessionLoading] = useState(true); // Blocks app render
+    const [profileLoading, setProfileLoading] = useState(false); // Blocks protected/admin features
+
     const [isAdmin, setIsAdmin] = useState(false);
     const [userRole, setUserRole] = useState('guest'); // 'guest', 'standard', 'premium', 'admin'
 
     useEffect(() => {
         // 1. Get initial session
-        const getSession = async () => {
+        const initAuth = async () => {
             try {
+                setSessionLoading(true);
                 const { data: { session }, error } = await supabase.auth.getSession();
 
                 setUser(session?.user ?? null);
+
                 if (session?.user) {
-                    await fetchProfile(session.user.id, session.user);
-                } else {
-                    setLoading(false);
+                    // Start profile fetch in background, don't block sessionLoading
+                    setProfileLoading(true);
+                    fetchProfile(session.user.id, session.user);
                 }
             } catch (e) {
                 console.error("AuthContext: getSession CRASH", e);
-                setLoading(false);
+            } finally {
+                // UNBLOCK APP RENDER IMMEDIATELY
+                setSessionLoading(false);
             }
         };
 
-        getSession();
+        initAuth();
 
         // 2. Listen for changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                console.log("AuthContext: User changed/session refreshed:", session.user.id);
-                await fetchProfile(session.user.id, session.user);
-            } else {
+            const previousUser = user;
+            const currentUser = session?.user ?? null;
+
+            setUser(currentUser);
+
+            // Only fetch profile if user has changed or signed in
+            if (currentUser && currentUser.id !== previousUser?.id) {
+                console.log("AuthContext: User changed/session refreshed:", currentUser.id);
+                setProfileLoading(true);
+                await fetchProfile(currentUser.id, currentUser);
+            } else if (!currentUser) {
                 console.log("AuthContext: No session found (Guest mode)");
                 setProfile(null);
-                setLoading(false);
                 setUserRole('guest');
                 setIsAdmin(false);
+                setProfileLoading(false);
             }
         });
 
@@ -52,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchProfile = async (userId, currentUser) => {
         try {
-            // 15s timeout to allow for Supabase cold starts, but prevent infinite loading
+            // 15s timeout to prevent infinite loading state
             const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Profile fetch timed out (15s)')), 15000)
             );
@@ -84,9 +96,10 @@ export const AuthProvider = ({ children }) => {
             setIsAdmin(role === 'admin');
         } catch (err) {
             console.error("AuthContext: fetchProfile CRASH", err);
+            // Fallback for crash
             setUserRole('standard');
         } finally {
-            setLoading(false);
+            setProfileLoading(false);
         }
     };
 
@@ -96,7 +109,9 @@ export const AuthProvider = ({ children }) => {
         userRole, // 'standard', 'premium', 'admin'
         isAdmin: userRole === 'admin',
         isPremium: userRole === 'premium' || userRole === 'admin', // Admins get premium features
-        loading,
+        loading: sessionLoading, // Map legacy 'loading' to sessionLoading for backward compat
+        sessionLoading,
+        profileLoading,
         signIn: () => supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
@@ -105,11 +120,13 @@ export const AuthProvider = ({ children }) => {
         }),
         signOut: () => {
             setUserRole('guest');
+            setIsAdmin(false);
+            setProfile(null);
             supabase.auth.signOut();
         },
     };
 
-    if (loading) {
+    if (sessionLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-lime-50 text-emerald-800">
                 <div className="animate-pulse font-bold text-xl">Loading Nouriva...</div>
