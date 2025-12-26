@@ -7,7 +7,7 @@ import { useToast } from '../../lib/ToastContext';
 function AdminRecipeList() {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { toast } = useToast();
+    const toast = useToast();
 
     useEffect(() => {
         fetchRecipes();

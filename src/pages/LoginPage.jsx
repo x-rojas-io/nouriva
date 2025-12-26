@@ -203,6 +203,18 @@ function LoginPage() {
                 <p className="mt-6 text-xs text-gray-500">
                     By signing in, you agree to our Terms of Service and Privacy Policy.
                 </p>
+
+                {import.meta.env.DEV && (
+                    <div className="mt-8 pt-4 border-t border-gray-100">
+                        <button
+                            type="button"
+                            onClick={() => auth.devLogin()}
+                            className="text-xs font-mono text-purple-600 bg-purple-50 px-3 py-1 rounded hover:bg-purple-100"
+                        >
+                            [DEV] Login as Admin
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

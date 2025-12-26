@@ -124,6 +124,17 @@ export const AuthProvider = ({ children }) => {
             setProfile(null);
             supabase.auth.signOut();
         },
+        // DEV ONLY: Bypass Auth
+        devLogin: () => {
+            if (import.meta.env.DEV) {
+                console.log("AuthContext: DEV LOGIN BYPASS");
+                const devUser = { id: 'dev-admin', email: 'dev@admin.com' };
+                setUser(devUser);
+                setProfile({ id: 'dev-admin', role: 'admin', subscription_status: 'active' });
+                setUserRole('admin');
+                setIsAdmin(true);
+            }
+        }
     };
 
     if (sessionLoading) {

@@ -4,16 +4,18 @@ import { supabase } from '../../lib/supabase';
 
 import { optimizeImage } from '../../lib/imageUtils';
 import { useToast } from '../../lib/ToastContext';
+import { generateFullRecipe } from '../../lib/gemini'; // Import generator
 
 function RecipeEditor() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { toast } = useToast();
+    const toast = useToast();
     const isEditMode = !!id;
 
     const [loading, setLoading] = useState(isEditMode);
     const [saving, setSaving] = useState(false);
     const [generating, setGenerating] = useState(false);
+    const [magicFilling, setMagicFilling] = useState(false); // New loading state
 
     // Form State
     const [formData, setFormData] = useState({
@@ -69,6 +71,39 @@ function RecipeEditor() {
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
+    };
+
+    // --- AI Magic Fill Handler ---
+    const handleMagicFill = async () => {
+        if (!formData.name) return toast.error("Please enter a Recipe Name first!");
+
+        setMagicFilling(true);
+        try {
+            const recipeData = await generateFullRecipe(formData.name, imagePrompt || "Healthy keto style");
+
+            // Populate Form
+            setFormData(prev => ({
+                ...prev,
+                type: recipeData.type || 'dinner',
+                is_premium: recipeData.is_premium || false,
+                steps: recipeData.steps || []
+            }));
+
+            // Populate Ingredients
+            if (recipeData.ingredients) {
+                const list = Object.entries(recipeData.ingredients).map(([name, val]) => ({
+                    name, quantity: val.quantity, unit: val.unit
+                }));
+                setIngredientList(list);
+            }
+
+            toast.success("Recipe magically generated! ✨");
+        } catch (err) {
+            console.error(err);
+            toast.error("Magic Fill failed. Check API configuration.");
+        } finally {
+            setMagicFilling(false);
+        }
     };
 
     // --- Image Workflow Handlers ---
@@ -212,7 +247,17 @@ function RecipeEditor() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label className="block text-sm font-bold text-gray-700 mb-1">Recipe Name</label>
-                        <input name="name" value={formData.name} onChange={handleChange} className="w-full border p-2 rounded" required />
+                        <div className="flex gap-2">
+                            <input name="name" value={formData.name} onChange={handleChange} className="flex-1 border p-2 rounded" required placeholder="e.g. Keto Avocado Burger" />
+                            <button
+                                type="button"
+                                onClick={handleMagicFill}
+                                disabled={magicFilling}
+                                className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-2 rounded font-bold hover:from-purple-600 hover:to-indigo-700 shadow flex items-center gap-1 text-sm whitespace-nowrap"
+                            >
+                                {magicFilling ? 'Thinking...' : '🪄 Magic Fill'}
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-gray-700 mb-1">Type</label>

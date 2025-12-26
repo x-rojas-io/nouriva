@@ -58,12 +58,56 @@ export async function generateRecipeImage(recipeName, ingredients) {
 }
 
 /**
+ * Generates a full recipe (ingredients, steps, type) from a simple description.
+ */
+export async function generateFullRecipe(title, description = '') {
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Verified working model
+
+        const prompt = `
+            You are a keto/low-carb nutrition expert and chef.
+            Create a detailed, healthy recipe based on this request:
+            Title: "${title}"
+            Description/Notes: "${description}"
+
+            Requirements:
+            1.  Strictly Low Carb / Healthy / Keto-friendly unless specified otherwise.
+            2.  Ingredients must be realistic quantities.
+            3.  Structured JSON output ONLY.
+
+            Output Format (JSON):
+            {
+                "type": "breakfast|lunch|dinner|snack",
+                "is_premium": true, 
+                "steps": ["Step 1...", "Step 2..."],
+                "ingredients": {
+                    "Ingredient Name": { "quantity": "Number", "unit": "g/oz/cup/pcs" }
+                }
+            }
+            Example Ingredient: "Avocado": { "quantity": "1", "unit": "whole" }
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        // Clean markdown
+        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(jsonStr);
+
+    } catch (error) {
+        console.error("Gemini Recipe Gen Error:", error);
+        throw error;
+    }
+}
+
+/**
  * Uses Gemini to interpret a natural language search query.
  * Returns structured parameters for DB filtering.
  */
 export async function understandRecipeQuery(userQuery) {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Consistent model usage
 
         const prompt = `
             You are a search parser for a recipe app. 
