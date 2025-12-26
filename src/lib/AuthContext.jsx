@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext({});
@@ -13,6 +13,9 @@ export const AuthProvider = ({ children }) => {
 
     const [isAdmin, setIsAdmin] = useState(false);
     const [userRole, setUserRole] = useState('guest'); // 'guest', 'standard', 'premium', 'admin'
+
+    // Fix: Use ref to track user ID across stale closures in event listeners
+    const lastUserIdRef = useRef(null);
 
     useEffect(() => {
         // 1. Get initial session
@@ -40,18 +43,21 @@ export const AuthProvider = ({ children }) => {
 
         // 2. Listen for changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            const previousUser = user;
             const currentUser = session?.user ?? null;
+            const previousUserId = lastUserIdRef.current; // Use Ref for truth
 
             setUser(currentUser);
 
             // Only fetch profile if user has changed or signed in
-            if (currentUser && currentUser.id !== previousUser?.id) {
+            if (currentUser && currentUser.id !== previousUserId) {
                 console.log("AuthContext: User changed/session refreshed:", currentUser.id);
+                lastUserIdRef.current = currentUser.id; // Update Ref
+
                 setProfileLoading(true);
                 await fetchProfile(currentUser.id, currentUser);
             } else if (!currentUser) {
                 console.log("AuthContext: No session found (Guest mode)");
+                lastUserIdRef.current = null; // Reset Ref
                 setProfile(null);
                 setUserRole('guest');
                 setIsAdmin(false);

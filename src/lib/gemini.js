@@ -78,7 +78,8 @@ export async function generateFullRecipe(title, description = '') {
             Output Format (JSON):
             {
                 "type": "breakfast|lunch|dinner|snack",
-                "is_premium": true, 
+                "is_premium": true,
+                "description": "Short appetizing summary (max 2 sentences)",
                 "steps": ["Step 1...", "Step 2..."],
                 "ingredients": {
                     "Ingredient Name": { "quantity": "Number", "unit": "g/oz/cup/pcs" }

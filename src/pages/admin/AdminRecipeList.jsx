@@ -85,7 +85,7 @@ function AdminRecipeList() {
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-lime-50 border-b border-lime-100">
                         <tr>
-                            <th className="p-4 font-bold text-emerald-700">ID</th>
+
                             <th className="p-4 font-bold text-emerald-700">Image</th>
                             <th className="p-4 font-bold text-emerald-700">Name</th>
                             <th className="p-4 font-bold text-emerald-700">Type</th>
@@ -96,7 +96,7 @@ function AdminRecipeList() {
                     <tbody>
                         {recipes.map(recipe => (
                             <tr key={recipe.id} className="hover:bg-gray-50 border-b last:border-0">
-                                <td className="p-4 text-gray-500">#{recipe.id}</td>
+
                                 <td className="p-4">
                                     {recipe.image ? (
                                         <img src={recipe.image} alt={recipe.name} className="w-12 h-12 object-cover rounded" />

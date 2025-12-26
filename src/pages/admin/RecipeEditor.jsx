@@ -20,6 +20,7 @@ function RecipeEditor() {
     // Form State
     const [formData, setFormData] = useState({
         name: '',
+        description: '',
         type: 'breakfast',
         image: '', // This will hold the FINAL URL (Supabase or otherwise)
         steps: [''],
@@ -86,6 +87,7 @@ function RecipeEditor() {
                 ...prev,
                 type: recipeData.type || 'dinner',
                 is_premium: recipeData.is_premium || false,
+                description: recipeData.description || '',
                 steps: recipeData.steps || []
             }));
 
@@ -164,9 +166,22 @@ function RecipeEditor() {
         e.preventDefault();
         setSaving(true);
 
-        let finalImageUrl = formData.image;
-
         try {
+            // 0. Validation: Check for duplicates (Create mode only)
+            if (!isEditMode) {
+                const { data: existing } = await supabase
+                    .from('recipes')
+                    .select('id')
+                    .ilike('name', formData.name.trim())
+                    .single();
+
+                if (existing) {
+                    throw new Error(`A recipe named "${formData.name}" already exists!`);
+                }
+            }
+
+            let finalImageUrl = formData.image;
+
             // 1. Handle Image Persistence (If new image)
             if (imageFile) {
                 // Optimize
@@ -199,9 +214,10 @@ function RecipeEditor() {
             });
 
             const payload = {
-                name: formData.name,
+                name: formData.name.trim(), // Normalize name
+                description: formData.description,
                 type: formData.type,
-                image: finalImageUrl, // Ensure we save the Supabase URL
+                image: finalImageUrl,
                 is_premium: formData.is_premium,
                 steps: formData.steps.filter(s => s.trim() !== ''),
                 ingredients: ingredientsObj
@@ -220,8 +236,6 @@ function RecipeEditor() {
             if (!error && (!data || data.length === 0)) {
                 throw new Error("Database rejected save (RLS).");
             }
-            if (error) throw error;
-
             if (error) throw error;
 
             toast.success('Recipe saved successfully!');
@@ -245,20 +259,36 @@ function RecipeEditor() {
 
                 {/* Basics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Column 1: Name & Description */}
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Recipe Name</label>
-                        <div className="flex gap-2">
-                            <input name="name" value={formData.name} onChange={handleChange} className="flex-1 border p-2 rounded" required placeholder="e.g. Keto Avocado Burger" />
-                            <button
-                                type="button"
-                                onClick={handleMagicFill}
-                                disabled={magicFilling}
-                                className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-2 rounded font-bold hover:from-purple-600 hover:to-indigo-700 shadow flex items-center gap-1 text-sm whitespace-nowrap"
-                            >
-                                {magicFilling ? 'Thinking...' : '🪄 Magic Fill'}
-                            </button>
+                        <div className="mb-4">
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Recipe Name</label>
+                            <div className="flex gap-2">
+                                <input name="name" value={formData.name} onChange={handleChange} className="flex-1 border p-2 rounded" required placeholder="e.g. Keto Avocado Burger" />
+                                <button
+                                    type="button"
+                                    onClick={handleMagicFill}
+                                    disabled={magicFilling}
+                                    className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-2 rounded font-bold hover:from-purple-600 hover:to-indigo-700 shadow flex items-center gap-1 text-sm whitespace-nowrap"
+                                >
+                                    {magicFilling ? 'Thinking...' : '🪄 Magic Fill (Text Only)'}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                            <textarea
+                                name="description"
+                                value={formData.description || ''}
+                                onChange={handleChange}
+                                className="w-full border p-2 rounded h-24 text-sm"
+                                placeholder="A short, appetizing summary of the dish..."
+                            />
                         </div>
                     </div>
+
+                    {/* Column 2: Type */}
                     <div>
                         <label className="block text-sm font-bold text-gray-700 mb-1">Type</label>
                         <select name="type" value={formData.type} onChange={handleChange} className="w-full border p-2 rounded">
@@ -309,7 +339,7 @@ function RecipeEditor() {
                                         disabled={generating}
                                         className="mt-2 bg-purple-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-purple-700 w-full md:w-auto"
                                     >
-                                        {generating ? 'Generating...' : 'Run Prompt'}
+                                        {generating ? 'Generating...' : '🖼️ Generate Image Only'}
                                     </button>
                                 </div>
                             ) : (
@@ -377,8 +407,8 @@ function RecipeEditor() {
                         {saving ? 'Saving & Uploading...' : 'Save Recipe'}
                     </button>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }
 
