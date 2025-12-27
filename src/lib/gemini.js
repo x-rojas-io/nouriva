@@ -65,21 +65,24 @@ export async function generateFullRecipe(title, description = '') {
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Verified working model
 
         const prompt = `
-            You are a keto/low-carb nutrition expert and chef.
-            Create a detailed, healthy recipe based on this request:
+            You are a strict keto/low-carb nutrition expert and chef (Nouriva Vision).
+            Create a detailed, healthy, low-carb recipe based on this request:
             Title: "${title}"
-            Description/Notes: "${description}"
+            User Instructions/Notes: "${description}"
 
             Requirements:
-            1.  Strictly Low Carb / Healthy / Keto-friendly unless specified otherwise.
+            1.  **NO SUGAR, NO GRAINS, LOW CARB**. Focus on healthy fats (Avocado, Olive Oil), lean proteins, and low-carb vegetables.
             2.  Ingredients must be realistic quantities.
             3.  Structured JSON output ONLY.
+            4.  Include a "visual_prompt" field: A short, vivid description of the final dish for food photography (max 20 words).
+            5.  **Output Description**: Generate a short, appetizing summary (max 2 sentences) for the final recipe.
 
             Output Format (JSON):
             {
                 "type": "breakfast|lunch|dinner|snack",
                 "is_premium": true,
                 "description": "Short appetizing summary (max 2 sentences)",
+                "visual_prompt": "A plate of...",
                 "steps": ["Step 1...", "Step 2..."],
                 "ingredients": {
                     "Ingredient Name": { "quantity": "Number", "unit": "g/oz/cup/pcs" }
@@ -94,7 +97,16 @@ export async function generateFullRecipe(title, description = '') {
 
         // Clean markdown
         const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        return JSON.parse(jsonStr);
+        const data = JSON.parse(jsonStr);
+
+        // Auto-generate Image URL using the visual prompt
+        let imageUrl = '';
+        if (data.visual_prompt) {
+            const encodedPrompt = encodeURIComponent(data.visual_prompt + " realistic, 4k, food photography, cinematic lighting, healthy keto");
+            imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true`;
+        }
+
+        return { ...data, image: imageUrl };
 
     } catch (error) {
         console.error("Gemini Recipe Gen Error:", error);

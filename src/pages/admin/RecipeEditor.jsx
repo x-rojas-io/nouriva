@@ -80,7 +80,8 @@ function RecipeEditor() {
 
         setMagicFilling(true);
         try {
-            const recipeData = await generateFullRecipe(formData.name, imagePrompt || "Healthy keto style");
+            // Use Name + Description as the Prompt Context
+            const recipeData = await generateFullRecipe(formData.name, formData.description || "Strict Keto");
 
             // Populate Form
             setFormData(prev => ({
@@ -91,6 +92,19 @@ function RecipeEditor() {
                 steps: recipeData.steps || []
             }));
 
+            // Handle Generated Image
+            if (recipeData.image) {
+                setPreviewUrl(recipeData.image);
+                // Convert URL to Blob for upload
+                try {
+                    const res = await fetch(recipeData.image);
+                    const blob = await res.blob();
+                    setImageFile(blob);
+                } catch (imgErr) {
+                    console.error("Failed to fetch generated image blob:", imgErr);
+                }
+            }
+
             // Populate Ingredients
             if (recipeData.ingredients) {
                 const list = Object.entries(recipeData.ingredients).map(([name, val]) => ({
@@ -99,7 +113,7 @@ function RecipeEditor() {
                 setIngredientList(list);
             }
 
-            toast.success("Recipe magically generated! ✨");
+            toast.success("Recipe and image generated! ✨");
         } catch (err) {
             console.error(err);
             toast.error("Magic Fill failed. Check API configuration.");
@@ -258,115 +272,95 @@ function RecipeEditor() {
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow space-y-6">
 
                 {/* Basics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Column 1: Name & Description */}
-                    <div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Recipe Name</label>
-                            <div className="flex gap-2">
-                                <input name="name" value={formData.name} onChange={handleChange} className="flex-1 border p-2 rounded" required placeholder="e.g. Keto Avocado Burger" />
-                                <button
-                                    type="button"
-                                    onClick={handleMagicFill}
-                                    disabled={magicFilling}
-                                    className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-2 rounded font-bold hover:from-purple-600 hover:to-indigo-700 shadow flex items-center gap-1 text-sm whitespace-nowrap"
-                                >
-                                    {magicFilling ? 'Thinking...' : '🪄 Magic Fill (Text Only)'}
-                                </button>
-                            </div>
+                {/* Basics */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    {/* Column 1: Inputs for Creator */}
+                    <div className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Recipe Name *</label>
+                            <input
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-emerald-500 outline-none"
+                                required
+                                placeholder="e.g. Keto Avocado Burger"
+                            />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Description / AI Prompt</label>
                             <textarea
                                 name="description"
                                 value={formData.description || ''}
                                 onChange={handleChange}
-                                className="w-full border p-2 rounded h-24 text-sm"
-                                placeholder="A short, appetizing summary of the dish..."
+                                className="w-full border border-gray-300 p-2 rounded h-32 text-sm focus:ring-2 focus:ring-emerald-500 outline-none resize-none"
+                                placeholder="Enter instructions (e.g. 'Spicy, no onions') OR a final summary. The AI will use this to generate the recipe."
                             />
                         </div>
-                    </div>
 
-                    {/* Column 2: Type */}
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Type</label>
-                        <select name="type" value={formData.type} onChange={handleChange} className="w-full border p-2 rounded">
-                            <option value="breakfast">Breakfast</option>
-                            <option value="lunch">Lunch</option>
-                            <option value="dinner">Dinner</option>
-                            <option value="snack">Snack</option>
-                        </select>
-                    </div>
-                </div>
-
-                {/* New Image Workflow */}
-                <div className="border rounded p-4 bg-gray-50">
-                    <label className="block text-sm font-bold text-gray-700 mb-3">Recipe Image</label>
-
-                    {/* Tabs */}
-                    <div className="flex gap-4 border-b mb-4">
+                        {/* Magic Button - Prominent */}
                         <button
                             type="button"
-                            onClick={() => setActiveTab('generate')}
-                            className={`pb-2 px-1 text-sm font-bold border-b-2 transition ${activeTab === 'generate' ? 'border-nouriva-green text-nouriva-green' : 'border-transparent text-gray-500'}`}
+                            onClick={handleMagicFill}
+                            disabled={magicFilling}
+                            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-3 rounded-lg font-bold hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex justify-center items-center gap-2"
                         >
-                            ✨ Generate (AI)
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('upload')}
-                            className={`pb-2 px-1 text-sm font-bold border-b-2 transition ${activeTab === 'upload' ? 'border-nouriva-green text-nouriva-green' : 'border-transparent text-gray-500'}`}
-                        >
-                            📁 Upload File
+                            {magicFilling ? (
+                                <>
+                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Create Magic...
+                                </>
+                            ) : (
+                                <>✨ Magic Fill (Generate Everything)</>
+                            )}
                         </button>
                     </div>
 
-                    {/* Tab Content */}
-                    <div className="flex flex-col md:flex-row gap-6">
-                        <div className="flex-1 space-y-3">
-                            {activeTab === 'generate' ? (
-                                <div>
-                                    <textarea
-                                        placeholder="Describe the image (e.g. 'A stack of fluffy pancakes with berries, professional food photography')..."
-                                        value={imagePrompt}
-                                        onChange={(e) => setImagePrompt(e.target.value)}
-                                        className="w-full border p-2 rounded h-24 text-sm"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={handleGeneratePreview}
-                                        disabled={generating}
-                                        className="mt-2 bg-purple-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-purple-700 w-full md:w-auto"
-                                    >
-                                        {generating ? 'Generating...' : '🖼️ Generate Image Only'}
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="p-4 border-2 border-dashed rounded text-center">
-                                    <input type="file" accept="image/*" onChange={handleFileUpload} />
-                                </div>
-                            )}
-                            <p className="text-xs text-gray-500 italic">
-                                Note: Image will be optimized and saved to database only when you click "Save Recipe".
-                            </p>
+                    {/* Column 2: Meta, Options & Preview */}
+                    <div className="space-y-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Meal Type</label>
+                            <select name="type" value={formData.type} onChange={handleChange} className="w-full border border-gray-300 p-2 rounded bg-white">
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="snack">Snack</option>
+                            </select>
                         </div>
 
-                        {/* Preview Area */}
-                        <div className="w-full md:w-48 h-48 bg-gray-200 rounded overflow-hidden flex items-center justify-center border">
-                            {previewUrl ? (
-                                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                            ) : (
-                                <span className="text-gray-400 text-sm">No Preview</span>
-                            )}
+                        <div className="flex items-center space-x-2">
+                            <input type="checkbox" name="is_premium" id="is_premium" checked={formData.is_premium} onChange={handleChange} className="h-5 w-5 text-nouriva-green accent-emerald-600 focus:ring-emerald-500" />
+                            <label htmlFor="is_premium" className="font-bold text-gray-700 cursor-pointer select-none">Premium (Subscribers Only)</label>
+                        </div>
+
+                        {/* Image Preview Card */}
+                        <div className="mt-4">
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Image Preview</label>
+                            <div className="w-full h-48 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center border border-gray-300 shadow-inner relative group">
+                                {previewUrl ? (
+                                    <>
+                                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all"></div>
+                                    </>
+                                ) : (
+                                    <div className="text-center p-4">
+                                        <div className="text-4xl mb-2">🖼️</div>
+                                        <span className="text-gray-400 text-sm">Image will appear here</span>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="mt-2 text-right">
+                                <label className="text-xs text-blue-600 cursor-pointer hover:underline">
+                                    Upload manually?
+                                    <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                {/* Premium */}
-                <div className="flex items-center space-x-2">
-                    <input type="checkbox" name="is_premium" id="is_premium" checked={formData.is_premium} onChange={handleChange} className="h-5 w-5 text-nouriva-green" />
-                    <label htmlFor="is_premium" className="font-bold text-gray-700">Premium (Subscribers Only)</label>
                 </div>
 
                 <hr />
