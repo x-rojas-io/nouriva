@@ -27,12 +27,16 @@ function Dashboard() {
                 .eq('type', 'snack');
 
             // Note: Reading profiles might fallback to 0 if RLS blocks listing all users
-            const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+            const { count: userCount } = await supabase
+                .from('profiles')
+                .select('*', { count: 'exact', head: true })
+                .neq('role', 'admin'); // Exclude admins
 
             const { count: subCount } = await supabase
                 .from('profiles')
                 .select('*', { count: 'exact', head: true })
-                .eq('subscription_status', 'premium');
+                .eq('subscription_status', 'premium')
+                .neq('role', 'admin'); // Exclude admins
 
             setStats({
                 totalRecipes: recipeCount || 0,
