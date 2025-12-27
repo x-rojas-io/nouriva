@@ -93,7 +93,7 @@ export const AuthProvider = ({ children }) => {
                 setProfile(data);
                 if (data.role === 'admin' || isHardcodedAdmin) {
                     role = 'admin';
-                } else if (data.subscription_status === 'active') {
+                } else if (data.subscription_status === 'active' || data.subscription_status === 'premium') {
                     role = 'premium';
                 }
             }

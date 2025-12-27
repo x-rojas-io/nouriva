@@ -55,9 +55,9 @@ function LandingPage() {
                 <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto">
                     Get unlimited access to our full library of recipes and daily plans.
                 </p>
-                <button className="bg-nouriva-gold text-white px-10 py-4 rounded-full font-bold hover:bg-yellow-600 transition shadow-lg transform hover:-translate-y-1">
-                    Get Started for Free
-                </button>
+                <Link to="/app/subscribe" className="bg-nouriva-gold text-white px-10 py-4 rounded-full font-bold hover:bg-yellow-600 transition shadow-lg transform hover:-translate-y-1 inline-block">
+                    Join the Club
+                </Link>
             </section>
         </div>
     );

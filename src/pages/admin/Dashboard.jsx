@@ -129,8 +129,8 @@ function Dashboard() {
                         <Link to="/admin/recipes/new" className="block w-full bg-white text-emerald-800 px-4 py-3 rounded font-bold shadow hover:bg-gray-100 text-center transition">
                             + New Recipe
                         </Link>
-                        <Link to="/admin/media" className="block w-full bg-emerald-800/50 text-white border border-emerald-500 px-4 py-3 rounded font-bold hover:bg-emerald-700 text-center transition">
-                            Media Library
+                        <Link to="/admin/newsletter" className="block w-full bg-nouriva-gold text-emerald-900 px-4 py-3 rounded font-bold shadow hover:bg-yellow-500 text-center transition">
+                            📧 Newsletter Engine
                         </Link>
                         {/* 
                         <Link to="/admin/users" className="block w-full bg-emerald-800/50 text-white border border-emerald-500 px-4 py-3 rounded font-bold hover:bg-emerald-700 text-center transition">

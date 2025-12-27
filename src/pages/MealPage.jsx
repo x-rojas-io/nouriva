@@ -86,7 +86,11 @@ function MealsPage() {
         </button>
         <h1 className="text-2xl font-bold text-center text-emerald-700 flex-grow">
           {meal.name}
-          {meal.is_premium && <span className="ml-2 text-xs bg-nouriva-gold text-white px-2 py-1 rounded-full align-middle">PRO</span>}
+          {meal.is_premium && (
+            <span className="ml-2 bg-nouriva-gold text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide shadow-sm align-middle">
+              👑 CLUB EXCLUSIVE
+            </span>
+          )}
         </h1>
         <div className="w-16" />
       </div>

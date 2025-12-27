@@ -1,27 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { useToast } from '../lib/ToastContext';
 
 function PricingPage() {
-    const { user, isPremium } = useAuth();
+    const { user, profile, isPremium } = useAuth();
     const navigate = useNavigate();
     const toast = useToast();
-    const [loading, setLoading] = useState(false);
 
-    const handleJoinClub = async () => {
+    const [loading, setLoading] = useState(false);
+    const [fullName, setFullName] = useState('');
+
+    // Pre-fill name if available
+    useEffect(() => {
+        if (profile?.full_name) {
+            setFullName(profile.full_name);
+        }
+    }, [profile]);
+
+    const handleJoinClub = async (e) => {
+        e.preventDefault();
+
         if (!user) {
             toast.error("Please login or sign up first!");
             navigate('/login');
             return;
         }
 
+        if (!fullName.trim()) {
+            toast.error("Please enter your name to join.");
+            return;
+        }
+
         setLoading(true);
         try {
+            // Update Profile with Name and Premium Status
             const { error } = await supabase
                 .from('profiles')
-                .update({ subscription_status: 'premium' })
+                .update({
+                    subscription_status: 'premium',
+                    full_name: fullName.trim()
+                })
                 .eq('id', user.id);
 
             if (error) throw error;
@@ -38,6 +58,27 @@ function PricingPage() {
         }
     };
 
+    const handleLeaveClub = async () => {
+        if (!confirm("Are you sure you want to leave the club? You will lose access to premium recipes.")) return;
+
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update({ subscription_status: 'free' })
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            toast.success("You have left the club.");
+            window.location.href = '/app/home';
+        } catch (error) {
+            console.error(error);
+            toast.error("Error leaving club");
+            setLoading(false);
+        }
+    };
+
     if (isPremium) {
         return (
             <div className="min-h-screen bg-nouriva-cream flex items-center justify-center p-4">
@@ -46,12 +87,21 @@ function PricingPage() {
                     <p className="text-gray-600 mb-8">
                         You are a valued member of the Nouriva Club. Enjoy your exclusive access.
                     </p>
-                    <Link
-                        to="/app/home"
-                        className="block w-full py-3 px-6 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition"
-                    >
-                        Go to Recipes
-                    </Link>
+                    <div className="space-y-4">
+                        <Link
+                            to="/app/home"
+                            className="block w-full py-3 px-6 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition"
+                        >
+                            Go to Recipes
+                        </Link>
+                        <button
+                            onClick={handleLeaveClub}
+                            disabled={loading}
+                            className="block w-full py-3 px-6 rounded-lg border border-red-200 text-red-500 font-medium hover:bg-red-50 transition text-sm"
+                        >
+                            {loading ? "Leaving..." : "Leave Club"}
+                        </button>
+                    </div>
                 </div>
             </div>
         );
@@ -64,14 +114,14 @@ function PricingPage() {
                     Unlock the Full Nouriva Experience
                 </h1>
                 <p className="text-xl text-gray-600 mb-12">
-                    Join the <strong>Nouriva Club</strong> for free. No fees, just healthy living.
+                    Join the <strong>Nouriva Club</strong> by subscribing to our newsletter.
                 </p>
 
                 <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto items-center">
                     {/* Guest Tier */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 opacity-75 hover:opacity-100 transition">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">Guest</h3>
-                        <div className="text-3xl font-bold text-gray-400 mb-6">Free</div>
+                        <div className="text-2xl font-bold text-gray-400 mb-6">Browsing</div>
                         <ul className="text-left space-y-3 mb-8 text-gray-500 text-sm">
                             <li>✓ Browse basic recipes</li>
                             <li>✓ View nutritional info</li>
@@ -87,34 +137,61 @@ function PricingPage() {
                         </Link>
                     </div>
 
-                    {/* Club Tier */}
-                    <div className="bg-gradient-to-br from-emerald-900 to-teal-900 text-white p-8 rounded-2xl shadow-xl transform md:scale-110 relative overflow-hidden">
+                    {/* Club Tier - Form */}
+                    <div className="bg-gradient-to-br from-emerald-900 to-teal-900 text-white p-8 rounded-2xl shadow-xl transform md:scale-110 relative overflow-hidden text-left">
                         <div className="absolute top-0 right-0 bg-nouriva-gold text-emerald-900 text-xs font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">
                             Recommended
                         </div>
                         <h3 className="text-2xl font-bold mb-2">Nouriva Club</h3>
-                        <div className="text-4xl font-bold text-nouriva-gold mb-6">
-                            $0<span className="text-lg text-emerald-300 font-normal">/forever</span>
-                        </div>
-                        <ul className="text-left space-y-3 mb-8 text-emerald-100 text-lg">
-                            <li>✓ <strong>Unlock ALL Recipes</strong> (Strict Keto)</li>
-                            <li>✓ <strong>Daily Meal Plans</strong></li>
-                            <li>✓ <strong>Exclusive Weekly Newsletter</strong></li>
-                            <li>✓ No Ads, Pure Focus</li>
-                        </ul>
-                        <button
-                            onClick={handleJoinClub}
-                            disabled={loading}
-                            className="w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
-                        >
-                            {loading ? (
-                                <span className="animate-pulse">Unlocking...</span>
-                            ) : (
-                                "Join the Club (Free)"
+                        <p className="text-emerald-100/80 mb-6 text-sm">
+                            Get full access in exchange for joining our weekly newsletter.
+                        </p>
+
+                        <form onSubmit={handleJoinClub} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Your Name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={fullName}
+                                    onChange={e => setFullName(e.target.value)}
+                                    placeholder="Jane Doe"
+                                    className="w-full p-3 rounded bg-emerald-800 border border-emerald-700 text-white placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold"
+                                />
+                            </div>
+
+                            {user?.email && (
+                                <div>
+                                    <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Email</label>
+                                    <input
+                                        type="email"
+                                        disabled
+                                        value={user.email}
+                                        className="w-full p-3 rounded bg-emerald-800/50 border border-emerald-700/50 text-emerald-300 cursor-not-allowed"
+                                    />
+                                </div>
                             )}
-                        </button>
-                        <p className="text-xs text-emerald-400 mt-4">
-                            By joining, you agree to receive our weekly curated newsletter.
+
+                            <ul className="space-y-2 mb-6 text-emerald-100 text-sm">
+                                <li>✓ <strong>Unlock ALL Recipes</strong></li>
+                                <li>✓ <strong>Weekly Newsletter</strong></li>
+                            </ul>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
+                            >
+                                {loading ? (
+                                    <span className="animate-pulse">Joining...</span>
+                                ) : (
+                                    "Join Newsletter & Unlock"
+                                )}
+                            </button>
+                        </form>
+
+                        <p className="text-xs text-emerald-400 mt-4 text-center">
+                            We respect your inbox. No spam, ever.
                         </p>
                     </div>
                 </div>

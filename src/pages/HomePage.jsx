@@ -144,11 +144,15 @@ function HomePage() {
             <p className="text-emerald-700 text-sm">
               {isPremium
                 ? '✨ Premium Member Access Unlocked'
-                : 'Upgrade to Premium for full access to all recipes.'}
+                : (
+                  <Link to="/app/subscribe" className="underline font-bold hover:text-emerald-900">
+                    Join the Club for full access to all recipes!
+                  </Link>
+                )}
             </p>
             {isPremium && (
               <div className="mt-2 text-xs text-emerald-600 bg-white/50 px-2 py-1 rounded inline-block">
-                Full Premium Dashboard Coming Soon...
+                All locked recipes are now open for you. Enjoy! 🥑
               </div>
             )}
           </div>
@@ -170,7 +174,11 @@ function HomePage() {
                 <div key={meal.id} className="bg-white rounded-xl shadow overflow-hidden transform hover:scale-105 transition duration-200">
                   <p className="bg-gray-100 text-xs uppercase font-semibold text-gray-700 px-3 py-2 flex justify-between">
                     <span>{meal.type}</span>
-                    {meal.is_premium && <span className="text-nouriva-gold">👑 PRO</span>}
+                    {meal.is_premium && (
+                      <span className="bg-nouriva-gold text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide shadow-sm">
+                        👑 CLUB EXCLUSIVE
+                      </span>
+                    )}
                   </p>
                   <Link to={`/app/meal/${meal.id}`}>
                     {meal.image ? (
@@ -219,7 +227,11 @@ function HomePage() {
                       >
                         <p className="bg-gray-100 text-xs uppercase font-semibold text-gray-700 px-3 py-2 flex justify-between">
                           <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                          {meal.is_premium && <span className="text-nouriva-gold">👑 PRO</span>}
+                          {meal.is_premium && (
+                            <span className="bg-nouriva-gold text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide shadow-sm">
+                              👑 CLUB EXCLUSIVE
+                            </span>
+                          )}
                         </p>
 
                         <Link to={`/app/meal/${meal.id}`}>

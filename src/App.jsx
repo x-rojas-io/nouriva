@@ -19,6 +19,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminRecipeList from "./pages/admin/AdminRecipeList";
 import RecipeEditor from "./pages/admin/RecipeEditor";
+import NewsletterTool from "./pages/admin/NewsletterTool";
 
 // Layouts
 import MainLayout from "./layouts/MainLayout";
@@ -53,11 +54,12 @@ function App() {
           <Route path="recipes" element={<AdminRecipeList />} />
           <Route path="recipes/new" element={<RecipeEditor />} />
           <Route path="recipes/edit/:id" element={<RecipeEditor />} />
+          <Route path="newsletter" element={<NewsletterTool />} />
           <Route path="media" element={<div>Media Library (TODO)</div>} />
         </Route>
       </Route>
 
-      {/* Legacy Redirect (handle old bookmarks) */}
+      {/* Legacy Redirects (handle old bookmarks) */}
       <Route path="/home" element={<Navigate to="/app/home" replace />} />
       <Route path="/snack" element={<Navigate to="/app/snack" replace />} />
     </Routes>

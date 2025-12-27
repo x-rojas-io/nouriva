@@ -151,3 +151,40 @@ export async function understandRecipeQuery(userQuery) {
         return { text_search: userQuery, type: 'any', exclude_ingredients: [], include_ingredients: [] };
     }
 }
+
+export async function generateNewsletterContent(recipes) {
+    const recipeNames = recipes.map(r => r.name).join(", ");
+
+    const prompt = `
+    You are the editor of the "Nouriva Club" newsletter. 
+    Write a short, engaging email intro for this week's meal plan.
+    
+    The featured recipes are: ${recipeNames}.
+    
+    Tone: Warm, encouraging, focused on "Vibrant Living" and "Keto/Low-Carb" health benefits.
+    Style: Minimalist but inspiring. "Nouriva Vision".
+    
+    Output Format (JSON):
+    {
+      "subject": "A catchy, short subject line (max 6 words)",
+      "intro": "A 100-150 word intro paragraph connecting these meals to a theme (e.g., energy, focus, comfort)."
+    }
+  `;
+
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        // Clean JSON markdown
+        const jsonString = text.replace(/```json|```/g, '').trim();
+        return JSON.parse(jsonString);
+    } catch (error) {
+        console.error("Gemini Newsletter Error:", error);
+        return {
+            subject: "Your Weekly Nouriva Menu 🥑",
+            intro: "Here are your delicious, health-focused meals for the week. Enjoy the energy boost!"
+        };
+    }
+}
