@@ -10,6 +10,7 @@ function NewsletterTool() {
     const [generating, setGenerating] = useState(false);
     const [generatedContent, setGeneratedContent] = useState(null);
     const [emailCount, setEmailCount] = useState(0);
+    const [subscribers, setSubscribers] = useState([]);
     const toast = useToast();
 
     useEffect(() => {
@@ -27,12 +28,13 @@ function NewsletterTool() {
 
         setRecipes(recipeData || []);
 
-        // 2. Count Subscribers
-        const { count } = await supabase
+        // 2. Count & Fetch Subscribers
+        const { data: profiles, count } = await supabase
             .from("profiles")
-            .select("*", { count: "exact", head: true })
+            .select("email", { count: "exact" })
             .eq("subscription_status", "premium");
 
+        setSubscribers(profiles || []);
         setEmailCount(count || 0);
         setLoading(false);
     }
@@ -44,7 +46,12 @@ function NewsletterTool() {
             setGeneratedContent(content);
             toast.success("Newsletter Draft Generated! 📧");
         } catch (error) {
-            toast.error("AI Generation Failed");
+            console.error("AI Error:", error);
+            setGeneratedContent({
+                subject: "Weekly Vibe: Energy & Focus 🥑",
+                intro: "Here are some delicious recipes to keep you energized this week! (AI Generation Failed, using fallback)"
+            });
+            toast.error("AI Generation Failed - Checking Fallback");
         }
         setGenerating(false);
     };
@@ -55,7 +62,6 @@ function NewsletterTool() {
         if (!confirm(`Ready to blast this to ${emailCount} subscribers?`)) return;
 
         try {
-            // Use Production URL for emails
             const appUrl = import.meta.env.VITE_APP_URL || 'https://nouriva.club';
 
             // Call Supabase Edge Function
@@ -66,16 +72,16 @@ function NewsletterTool() {
                         generatedContent,
                         recipes,
                         appUrl
-                    )
+                    ),
+                    recipients: subscribers.map(s => s.email)
                 }
             });
 
             if (fnError) throw fnError;
 
-            // Success!
             toast.success(`Blast Executed! Sent to ${emailCount} subscribers.`);
 
-            // Save to History (Independent Try/Catch)
+            // Save to History
             try {
                 const { error: dbError } = await supabase.from('newsletters').insert({
                     subject: generatedContent.subject,
@@ -86,8 +92,6 @@ function NewsletterTool() {
                     recipient_count: emailCount
                 });
                 if (dbError) throw dbError;
-
-                // Force refresh of history only if save succeeded
                 setGeneratedContent({ ...generatedContent, sent: true });
             } catch (dbErr) {
                 console.error("DB Save Failed:", dbErr);
@@ -97,6 +101,8 @@ function NewsletterTool() {
         } catch (e) {
             console.error(e);
             toast.error("System Error: " + (e.message || "Unknown error"));
+            // Try to show more info if avaliable
+            if (e.context) console.log("Error Context:", e.context);
         }
     };
 
@@ -179,7 +185,7 @@ function NewsletterTool() {
                                     🚀 Blast to {emailCount} Subscribers
                                 </button>
                                 <div className="text-[10px] text-center text-gray-400 mt-2">
-                                    Uses Resend API. Ensure 'from' domain is verified.
+                                    Uses Resend API (Edge Function).
                                 </div>
                             </div>
                         </div>
@@ -213,42 +219,45 @@ function PastCampaigns({ refreshTrigger }) {
         setLoading(false);
     }
 
-    if (loading) return null;
-    if (campaigns.length === 0) return null;
+    if (loading) return <div className="p-4 text-center text-gray-400">Loading History...</div>;
 
     return (
         <div className="border-t pt-8">
             <h2 className="text-xl font-bold text-gray-800 mb-6">Past Campaigns</h2>
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipients</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipes</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {campaigns.map((camp) => (
-                            <tr key={camp.id}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {new Date(camp.sent_at).toLocaleDateString()}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {camp.subject}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {camp.recipient_count}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {camp.recipes?.length || 0} items
-                                </td>
+            {campaigns.length === 0 ? (
+                <div className="text-gray-400 italic text-center p-8 bg-gray-50 rounded">No campaigns sent yet.</div>
+            ) : (
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipients</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipes</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {campaigns.map((camp) => (
+                                <tr key={camp.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {new Date(camp.sent_at).toLocaleDateString()}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {camp.subject}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {camp.recipient_count}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {camp.recipes?.length || 0} items
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 }

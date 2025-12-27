@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     }
 
     try {
-        const { subject, html } = await req.json()
+        const { subject, html, recipients } = await req.json()
 
         if (!RESEND_API_KEY) {
             throw new Error('Missing RESEND_API_KEY variable')
@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
             },
             body: JSON.stringify({
                 from: 'Nouriva <newsletter@nouriva.club>',
-                to: ['delivered@resend.dev'], // Hardcoded to sandbox for safety until verified
+                to: recipients || ['delivered@resend.dev'], // Use real list
                 subject: subject,
                 html: html,
             }),
