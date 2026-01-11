@@ -5,6 +5,7 @@ import { useAuth } from "../lib/AuthContext";
 import { useToast } from "../lib/ToastContext";
 import { understandRecipeQuery } from "../lib/gemini";
 import SmartSearchBar from "../components/SmartSearchBar";
+import SmartRecipeGenerator from "../components/SmartRecipeGenerator";
 import RecipeCardSkeleton from "../components/RecipeCardSkeleton";
 
 function HomePage() {
@@ -158,6 +159,8 @@ function HomePage() {
           </div>
         )}
       </div>
+
+      <SmartRecipeGenerator />
 
       <SmartSearchBar onSearch={handleSearch} loading={isSearching} />
 

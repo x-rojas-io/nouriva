@@ -76,9 +76,11 @@ export async function generateFullRecipe(title, description = '') {
             3.  Structured JSON output ONLY.
             4.  Include a "visual_prompt" field: A short, vivid description of the final dish for food photography (max 20 words).
             5.  **Output Description**: Generate a short, appetizing summary (max 2 sentences) for the final recipe.
+            6.  **Name**: Generate a creative, appetizing name for the recipe.
 
             Output Format (JSON):
             {
+                "name": "Creative Recipe Name",
                 "type": "breakfast|lunch|dinner|snack",
                 "is_premium": true,
                 "description": "Short appetizing summary (max 2 sentences)",
@@ -102,7 +104,13 @@ export async function generateFullRecipe(title, description = '') {
         // Auto-generate Image URL using the visual prompt
         let imageUrl = '';
         if (data.visual_prompt) {
-            const encodedPrompt = encodeURIComponent(data.visual_prompt + " realistic, 4k, food photography, cinematic lighting, healthy keto");
+            console.log("Visual Prompt:", data.visual_prompt);
+            // Truncate to avoid URL length issues and ensure keyword "food" is first
+            const shortPrompt = (data.visual_prompt || "").substring(0, 100);
+            const finalPrompt = `delicious food dish, ${shortPrompt}`;
+            const encodedPrompt = encodeURIComponent(finalPrompt);
+
+            // Minimal URL for maximum compatibility
             imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true`;
         }
 
