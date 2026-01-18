@@ -19,41 +19,123 @@ function PricingPage() {
         }
     }, [profile]);
 
+    const [email, setEmail] = useState('');
+    const [otp, setOtp] = useState('');
+    const [showVerify, setShowVerify] = useState(false);
+
     const handleJoinClub = async (e) => {
         e.preventDefault();
 
-        if (!user) {
-            toast.error("Please login or sign up first!");
-            navigate('/login');
+        // Validate inputs
+        if (!fullName.trim()) return toast.error("Please enter your name to join.");
+
+        // If already authenticated (e.g. redirected from Login), immediate upgrade
+        if (user) {
+            await updateProfile(user.id, user.email);
             return;
         }
 
-        if (!fullName.trim()) {
-            toast.error("Please enter your name to join.");
-            return;
-        }
+        // Guest Flow: Step 1 - Send OTP
+        if (!email.trim()) return toast.error("Please enter your email.");
 
         setLoading(true);
         try {
-            // Update Profile with Name and Premium Status
-            const { error } = await supabase
-                .from('profiles')
-                .update({
-                    subscription_status: 'premium',
-                    full_name: fullName.trim()
-                })
-                .eq('id', user.id);
+            const { error } = await supabase.auth.signInWithOtp({
+                email: email.trim()
+            });
 
             if (error) throw error;
 
-            toast.success("Welcome to the Nouriva Club! 🎉");
-
-            // Force reload to update AuthContext permissions immediately
-            window.location.href = '/app/home';
-
+            toast.success("Code sent! Check your inbox.");
+            setShowVerify(true);
         } catch (error) {
             console.error(error);
-            toast.error("Could not join club. Please try again.");
+            toast.error("Error sending code: " + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const { data, error } = await supabase.auth.verifyOtp({
+                email: email.trim(),
+                token: otp,
+                type: 'email'
+            });
+
+            if (error) throw error;
+            if (!data.user) throw new Error("Verification failed");
+
+            // Success! Now update profile
+            await updateProfile(data.user.id, email);
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Invalid code: " + err.message);
+            setLoading(false);
+        }
+    };
+
+    const updateProfile = async (userId, userEmail) => {
+        setLoading(true);
+        console.log("PricingPage: Starting profile update for", userId);
+
+        try {
+            // 1. Check if profile exists
+            const { data: existingProfile, error: fetchError } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('id', userId)
+                .single();
+
+            if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "Row not found"
+                console.error("PricingPage: Profile check failed", fetchError);
+                // Continue to try insert anyway, or throw? Let's try insert.
+            }
+
+            let opError;
+
+            if (existingProfile) {
+                console.log("PricingPage: Profile exists, updating...");
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({
+                        subscription_status: 'premium',
+                        full_name: fullName.trim(),
+                    })
+                    .eq('id', userId);
+                opError = error;
+            } else {
+                console.log("PricingPage: Profile missing, inserting...");
+                const { error } = await supabase
+                    .from('profiles')
+                    .insert({
+                        id: userId,
+                        email: userEmail || user?.email, // Ensure email is included
+                        subscription_status: 'premium',
+                        full_name: fullName.trim(),
+                    });
+                opError = error;
+            }
+
+            if (opError) {
+                console.error("PricingPage: Write operation failed", opError);
+                alert("Database Error: " + opError.message + " (" + opError.code + ")");
+                throw opError;
+            }
+
+            console.log("PricingPage: Success!");
+            toast.success("Welcome to the Nouriva Club! 🎉");
+
+            // Force reload to ensure AuthContext picks up everything cleanly
+            window.location.href = '/app/home';
+        } catch (err) {
+            console.error("PricingPage: Catch block", err);
+            toast.error("Profile update failed: " + err.message);
             setLoading(false);
         }
     };
@@ -147,48 +229,87 @@ function PricingPage() {
                             Get full access in exchange for joining our weekly newsletter.
                         </p>
 
-                        <form onSubmit={handleJoinClub} className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Your Name</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={fullName}
-                                    onChange={e => setFullName(e.target.value)}
-                                    placeholder="Jane Doe"
-                                    className="w-full p-3 rounded bg-emerald-800 border border-emerald-700 text-white placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold"
-                                />
-                            </div>
+                        {!showVerify ? (
+                            <form onSubmit={handleJoinClub} className="space-y-4 animate-fadeIn">
+                                <div>
+                                    <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Your Name</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={fullName}
+                                        onChange={e => setFullName(e.target.value)}
+                                        placeholder="Jane Doe"
+                                        className="w-full p-3 rounded bg-emerald-800 border border-emerald-700 text-white placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold"
+                                    />
+                                </div>
 
-                            {user?.email && (
                                 <div>
                                     <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Email</label>
                                     <input
                                         type="email"
-                                        disabled
-                                        value={user.email}
-                                        className="w-full p-3 rounded bg-emerald-800/50 border border-emerald-700/50 text-emerald-300 cursor-not-allowed"
+                                        required
+                                        value={user ? user.email : email}
+                                        onChange={e => !user && setEmail(e.target.value)}
+                                        disabled={!!user}
+                                        placeholder="you@example.com"
+                                        className={`w-full p-3 rounded bg-emerald-800 border ${user ? 'border-emerald-700/50 text-emerald-300' : 'border-emerald-700 text-white'} placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold`}
                                     />
                                 </div>
-                            )}
 
-                            <ul className="space-y-2 mb-6 text-emerald-100 text-sm">
-                                <li>✓ <strong>Unlock ALL Recipes</strong></li>
-                                <li>✓ <strong>Weekly Newsletter</strong></li>
-                            </ul>
+                                <ul className="space-y-2 mb-6 text-emerald-100 text-sm">
+                                    <li>✓ <strong>Unlock ALL Recipes</strong></li>
+                                    <li>✓ <strong>Weekly Newsletter</strong></li>
+                                </ul>
 
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
-                            >
-                                {loading ? (
-                                    <span className="animate-pulse">Joining...</span>
-                                ) : (
-                                    "Join Newsletter & Unlock"
-                                )}
-                            </button>
-                        </form>
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
+                                >
+                                    {loading ? (
+                                        <span className="animate-pulse">Processing...</span>
+                                    ) : (
+                                        user ? "Complete Membership" : "Join Newsletter & Unlock"
+                                    )}
+                                </button>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleVerifyOtp} className="space-y-4 animate-fadeIn">
+                                <div className="p-4 bg-emerald-800/50 rounded-lg border border-emerald-500/30 text-center mb-4">
+                                    <p className="text-sm text-emerald-200 mb-1">Enter the code sent to</p>
+                                    <p className="font-bold text-white">{email}</p>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Verification Code</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        autoFocus
+                                        value={otp}
+                                        onChange={e => setOtp(e.target.value)}
+                                        placeholder="123456"
+                                        className="w-full p-3 rounded bg-emerald-800 border border-emerald-700 text-white placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold text-center tracking-widest text-xl font-mono"
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
+                                >
+                                    {loading ? "Verifying..." : "Verify & Join Club"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowVerify(false)}
+                                    className="w-full text-center text-sm text-emerald-400 hover:text-emerald-300 underline"
+                                >
+                                    Use a different email
+                                </button>
+                            </form>
+                        )}
 
                         <p className="text-xs text-emerald-400 mt-4 text-center">
                             We respect your inbox. No spam, ever.

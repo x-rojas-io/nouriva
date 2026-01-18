@@ -122,8 +122,14 @@ function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-nouriva-cream px-4">
             <div className="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md w-full">
                 {/* ... header ... */}
-                <h1 className="text-3xl font-bold text-nouriva-green mb-4">Welcome Back</h1>
-                <p className="text-gray-600 mb-8">Sign in to access your daily meal plans.</p>
+                <h1 className="text-3xl font-bold text-nouriva-green mb-2">Member Sign In</h1>
+                <p className="text-gray-600 mb-6">
+                    Enter your email to access the club.
+                </p>
+
+                <div className="mb-8 p-3 bg-emerald-50 rounded-lg border border-emerald-100 text-sm">
+                    Not a member yet? <a href="/app/subscribe" className="text-emerald-700 font-bold underline hover:text-emerald-900">Join the Club</a>
+                </div>
 
                 {!showVerify && (
                     <>

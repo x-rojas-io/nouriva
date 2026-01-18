@@ -1,19 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { optimizeImage } from '../lib/imageUtils';
 import { generateFullRecipe } from '../lib/gemini';
+import { useAuth } from '../lib/AuthContext';
 import { useToast } from '../lib/ToastContext';
 
 export default function SmartRecipeGenerator({ onRecipeCreated }) {
+    const { user } = useAuth() || {};
     const navigate = useNavigate();
-    const { toast } = useToast();
+    const toast = useToast();
 
     // Modal State
     const [isOpen, setIsOpen] = useState(false);
 
     // Process State
+    // Process State
     const [prompt, setPrompt] = useState('');
+    const [guestName, setGuestName] = useState('');
+    const [guestEmail, setGuestEmail] = useState('');
+    const [guestOtp, setGuestOtp] = useState('');
+    const [showGuestEmailInput, setShowGuestEmailInput] = useState(false);
+    const [showGuestOtpInput, setShowGuestOtpInput] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedRecipe, setGeneratedRecipe] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
@@ -25,6 +33,29 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
         setGeneratedRecipe(null);
         setIsGenerating(false);
     };
+
+    // Restore pending recipe if user just logged in
+    useEffect(() => {
+        if (user && !generatedRecipe) {
+            const pending = localStorage.getItem('pending_recipe');
+            if (pending) {
+                try {
+                    const parsed = JSON.parse(pending);
+                    // Valid for 1 hour to prevent stale restoration
+                    if (Date.now() - parsed.timestamp < 3600000) {
+                        setGeneratedRecipe(parsed.recipe);
+                        setIsOpen(true);
+                        toast.success("Welcome back! Restored your pending recipe. Click 'Save' to finish! 💾");
+                        localStorage.removeItem('pending_recipe');
+                    } else {
+                        localStorage.removeItem('pending_recipe');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('pending_recipe');
+                }
+            }
+        }
+    }, [user]);
 
     const handleGenerate = async () => {
         console.log("Handle generate triggered");
@@ -50,37 +81,29 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
 
         } catch (error) {
             console.error("Gemini Generation Error:", error);
-            toast.error("Failed to generate recipe. Please try again.");
+            toast.error("Generation Failed: " + (error.message || error));
         } finally {
             console.log("Finished generation, resetting state");
             setIsGenerating(false);
         }
     };
 
-    const handleSave = async () => {
-        console.log("Handle Save triggered");
-        if (!generatedRecipe) return;
+    const performSave = async (currentUser) => {
         setIsSaving(true);
-
         let toastId = null;
 
         try {
             if (toast && typeof toast.loading === 'function') {
                 toastId = toast.loading("Starting save process...");
-            } else {
-                console.warn("Toast system unavailable");
             }
 
             let finalImageUrl = generatedRecipe.image || "";
-            console.log("Initial Image URL:", finalImageUrl);
 
             // 1. Process Image if it exists
             if (generatedRecipe.image && generatedRecipe.image.startsWith('http')) {
                 try {
                     if (toastId) toast.loading("Processing image...", { id: toastId });
 
-                    // Attempt to fetch/optimize/upload, but allow failing back to original URL
-                    // Use a simple timeout race to prevent hanging
                     const processImagePromise = async () => {
                         const controller = new AbortController();
                         const id = setTimeout(() => controller.abort(), 8000); // 8s timeout
@@ -99,11 +122,9 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
                     };
 
                     finalImageUrl = await processImagePromise();
-                    console.log("Image processed & uploaded:", finalImageUrl);
 
                 } catch (imgErr) {
                     console.warn("Image processing failed (using original):", imgErr);
-                    // Non-blocking: just continue with original URL
                     if (toastId) toast.loading("Using original image link...", { id: toastId });
                 }
             }
@@ -116,9 +137,10 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
                 description: generatedRecipe.description || "",
                 type: generatedRecipe.type || 'lunch',
                 image: finalImageUrl,
-                is_premium: false,
+                is_premium: true,
                 steps: generatedRecipe.steps || [],
-                ingredients: generatedRecipe.ingredients || {}
+                ingredients: generatedRecipe.ingredients || {},
+                // user_id removed as per requirement: recipes go into common pool
             };
 
             // 3. Insert into DB
@@ -130,10 +152,8 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
 
             if (error) throw error;
 
-            console.log("Recipe saved successfully:", data);
-
             if (toastId) toast.dismiss(toastId);
-            if (toast && typeof toast.success === 'function') toast.success("Recipe saved!");
+            toast.success("Recipe saved! 🎉");
 
             handleClose();
             if (onRecipeCreated) onRecipeCreated(data);
@@ -142,11 +162,116 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
         } catch (err) {
             console.error("Save Critical Error:", err);
             if (toastId) toast.dismiss(toastId);
-            if (toast && typeof toast.error === 'function') {
-                toast.error("Failed to save: " + (err.message || "Unknown error"));
-            }
+            toast.error("Failed to save: " + (err.message || "Unknown error"));
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleVerifyAndSave = async () => {
+        if (!guestOtp) return toast.error("Please enter the code.");
+        setIsSaving(true);
+
+        try {
+            const { data, error } = await supabase.auth.verifyOtp({
+                email: guestEmail.trim(),
+                token: guestOtp,
+                type: 'email'
+            });
+
+            if (error) throw error;
+            const newUser = data.user;
+
+            if (!newUser) throw new Error("Verification failed (no user returned)");
+
+            // CRITICA: Check/Create Profile with Name!
+            // 1. Check if profile exists
+            const { data: existingProfile } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('id', newUser.id)
+                .single();
+
+            if (!existingProfile) {
+                // INSERT NEW with Name
+                console.log("Creating new guest profile...");
+                await supabase.from('profiles').insert({
+                    id: newUser.id,
+                    email: newUser.email,
+                    full_name: guestName.trim() || 'Guest Chef',
+                    subscription_status: 'premium'  // Enforce membership
+                });
+            } else {
+                console.log("Guest profile exists, proceeding...");
+            }
+
+            await performSave(newUser);
+
+        } catch (e) {
+            console.error(e);
+            toast.error("Verification failed: " + e.message);
+            setIsSaving(false);
+        }
+    };
+
+    const handleSave = async () => {
+        console.log("handleSave triggered. User:", !!user, "ShowGuestInput:", showGuestEmailInput);
+        if (!generatedRecipe) {
+            console.warn("No generated recipe, ignoring save.");
+            return;
+        }
+
+        // If logged in, just save
+        if (user) {
+            await performSave(user);
+            return;
+        }
+
+        // Guest Flow Init
+        if (!showGuestEmailInput) {
+            setShowGuestEmailInput(true);
+            return;
+        }
+
+        // Validation
+        if (!guestName.trim()) {
+            return toast.error("Please enter your name so we can save this for you!");
+        }
+        if (!guestEmail.trim() || !guestEmail.includes('@')) {
+            return toast.error("Please enter a valid email address.");
+        }
+
+        // Send OTP
+        let tid = null;
+        try {
+            console.log("Sending OTP to:", guestEmail);
+            tid = toast.loading("Sending login code...");
+
+            const response = await supabase.auth.signInWithOtp({
+                email: guestEmail.trim(),
+                options: { data: { full_name: guestName.trim() } } // Metadata backup
+            });
+
+            console.log("Supabase OTP Response Full:", response);
+
+            if (!response) throw new Error("No response from Supabase Auth service.");
+
+            const { data, error } = response;
+            if (error) throw error;
+
+            // Store pending details just in case
+            localStorage.setItem('pending_recipe', JSON.stringify({
+                recipe: generatedRecipe,
+                timestamp: Date.now()
+            }));
+
+            if (tid) toast.dismiss(tid);
+            toast.success("Code sent! Check your email.");
+            setShowGuestOtpInput(true);
+        } catch (e) {
+            console.error("Login failed:", e);
+            if (tid) toast.dismiss(tid);
+            toast.error("Login failed: " + (e.message || "Unknown error"));
         }
     };
 
@@ -273,20 +398,76 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
 
                 {/* Footer Actions */}
                 {generatedRecipe && !isGenerating && (
-                    <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 rounded-b-2xl">
-                        <button
-                            onClick={() => setGeneratedRecipe(null)}
-                            className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition"
-                        >
-                            Discard
-                        </button>
-                        <button
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            className="px-6 py-2 bg-emerald-600 text-white font-bold rounded-lg shadow hover:bg-emerald-700 transition flex items-center gap-2"
-                        >
-                            {isSaving ? 'Saving...' : 'Save & View Recipe'}
-                        </button>
+                    <div className="p-4 border-t border-gray-100 bg-gray-50 flex flex-col md:flex-row justify-end gap-3 rounded-b-2xl items-center">
+
+                        {/* Guest Name & Email Input */}
+                        {showGuestEmailInput && !showGuestOtpInput && !user && (
+                            <div className="w-full md:w-auto flex-1 animate-fadeIn flex flex-col md:flex-row gap-3">
+                                <input
+                                    type="text"
+                                    autoFocus
+                                    placeholder="Your Name"
+                                    value={guestName}
+                                    onChange={(e) => setGuestName(e.target.value)}
+                                    className="w-full md:w-40 px-4 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                                />
+                                <input
+                                    type="email"
+                                    placeholder="Enter email to join..."
+                                    value={guestEmail}
+                                    onChange={(e) => setGuestEmail(e.target.value)}
+                                    className="w-full md:w-60 px-4 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                                />
+                            </div>
+                        )}
+
+                        {/* Guest OTP Input */}
+                        {showGuestOtpInput && !user && (
+                            <div className="w-full md:w-auto flex-1 animate-fadeIn flex gap-2">
+                                <input
+                                    type="text"
+                                    autoFocus
+                                    placeholder="Enter 6-digit code"
+                                    value={guestOtp}
+                                    onChange={(e) => setGuestOtp(e.target.value)}
+                                    className="w-28 px-2 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-center font-mono tracking-widest uppercase"
+                                />
+                                <button
+                                    onClick={() => { setShowGuestOtpInput(false); setShowGuestEmailInput(true); }}
+                                    className="text-xs text-gray-400 hover:text-gray-600 underline"
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        )}
+
+                        <div className="flex gap-3 w-full md:w-auto justify-end">
+                            <button
+                                onClick={() => setGeneratedRecipe(null)}
+                                className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition"
+                            >
+                                Discard
+                            </button>
+
+                            {/* Main Action Button */}
+                            {showGuestOtpInput ? (
+                                <button
+                                    onClick={handleVerifyAndSave}
+                                    disabled={isSaving}
+                                    className="px-6 py-2 bg-nouriva-gold text-emerald-900 font-bold rounded-lg shadow hover:bg-yellow-500 transition flex items-center gap-2"
+                                >
+                                    {isSaving ? 'Verifying...' : 'Verify & Save 🎁'}
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleSave}
+                                    disabled={isSaving}
+                                    className={`px-6 py-2 ${showGuestEmailInput ? 'bg-nouriva-gold text-emerald-900' : 'bg-emerald-600 text-white'} font-bold rounded-lg shadow hover:opacity-90 transition flex items-center gap-2`}
+                                >
+                                    {isSaving ? 'Processing...' : (user ? 'Save & View Recipe' : (showGuestEmailInput ? 'Send Code' : 'Save Recipe'))}
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>

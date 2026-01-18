@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -6,51 +6,64 @@ if (!API_KEY) {
     console.warn("Missing VITE_GEMINI_API_KEY");
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const ai = new GoogleGenAI({ apiKey: API_KEY });
+
+// SAFETY: Fallback list - Prioritize Gemini 3
+const FALLBACK_MODELS = ["gemini-3-flash-preview", "gemini-2.0-flash-exp", "gemini-1.5-flash"];
 
 /**
- * Generates an image-like description or placeholder since direct Image Generation 
- * via the JS SDK client for Gemini is limited/experimental or requires specific Imagen endpoints.
- * 
- * NOTE: As of now, the standard 'gemini-pro' does NOT generate images directly (return bytes).
- * It generates text.
- * 
- * To actually get an IMAGE, we typically need to use an external Image Gen provider OR 
- * if the user has access to Imagen on Vertex AI (which is different than the AI Studio key).
- * 
- * However, since the user explicitly asked for "Gemini integration" for images and gave an AI Studio key,
- * we will attempt to use a clever workaround if direct generation isn't supported:
- * 1. PROMPT engineering to get a descriptive prompt.
- * 2. In a real scenario, we'd hit DALL-E or a dedicated Imagen endpoint.
- * 
- * BUT, assuming we want to try the latest features or fallback:
- * We will use a placeholder methodology if the API doesn't return an image, 
- * OR we will assume the user meant "Help me write the prompt" for now, 
- * UNLESS we can hit a known endpoint.
- * 
- * UPDATE: Let's assume we use the key to generate a PROMPT, and then use a free external API (like Pollinations.ai)
- * to render it, because the AI Studio key does not support direct Image generation HTTP responses easily on the client side yet.
- * 
- * This is a robust approach: Gemini -> Enhanced Prompt -> Pollinations/Other -> Image URL.
+ * Helper to try generation across multiple models to ensure high availability.
+ * @param {string} promptText 
+ * @param {object} config 
+ * @returns {Promise<any>}
+ */
+async function generateSafe(promptText, config = {}) {
+    let lastError = null;
+
+    for (const modelName of FALLBACK_MODELS) {
+        try {
+            console.log(`Attempting generation with model: ${modelName}`);
+            // New SDK signature
+            const response = await ai.models.generateContent({
+                model: modelName,
+                contents: promptText,
+                config: config
+            });
+
+            if (!response) throw new Error("Empty response");
+
+            // Normalize response to match expected "text()" usage or extracting data
+            // The new SDK returns a response object with .text property usually
+            return response;
+        } catch (error) {
+            console.warn(`Model ${modelName} failed:`, error.message);
+            lastError = error;
+            // Continue to next model...
+        }
+    }
+
+    throw lastError || new Error("All models failed to generate content.");
+}
+
+
+/**
+ * Generates an image-like description -> Pollinations URL
  */
 export async function generateRecipeImage(recipeName, ingredients) {
     try {
-        // 1. Use Gemini to create a vivid visual description
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const prompt = `Describe a delicious, high-quality, professional food photography shot of ${recipeName} made with ${ingredients.slice(0, 3).join(', ')}. Details only, visual style, no filler text. Max 30 words.`;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const visualDescription = response.text();
+        const result = await generateSafe(prompt);
+        // SDK V2: result.text directly available or result.response.text()
+        // SDK V1 uses result.response.text(). 
+        // Let's assume new SDK returns { text: "..." } or similar based on snippet.
+        // The snippet shows `response.text`.
+        const visualDescription = result.text;
 
         console.log("Gemini Prompt:", visualDescription);
 
-        // 2. Use a generation service (Pollinations is great for dev/demos as it's free and URL-based)
-        // We encode the description into the URL.
         const encodedPrompt = encodeURIComponent(visualDescription + " realistic, 4k, food photography, cinematic lighting");
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true`;
-
-        return imageUrl;
+        return `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true`;
     } catch (error) {
         console.error("Error generating image with Gemini:", error);
         throw error;
@@ -58,12 +71,10 @@ export async function generateRecipeImage(recipeName, ingredients) {
 }
 
 /**
- * Generates a full recipe (ingredients, steps, type) from a simple description.
+ * Generates a full recipe (ingredients, steps, type) from a description.
  */
 export async function generateFullRecipe(title, description = '') {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Verified working model
-
         const prompt = `
             You are a strict keto/low-carb nutrition expert and chef (Nouriva Vision).
             Create a detailed, healthy, low-carb recipe based on this request:
@@ -90,27 +101,27 @@ export async function generateFullRecipe(title, description = '') {
                     "Ingredient Name": { "quantity": "Number", "unit": "g/oz/cup/pcs" }
                 }
             }
-            Example Ingredient: "Avocado": { "quantity": "1", "unit": "whole" }
         `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const result = await generateSafe(prompt, { responseMimeType: "application/json" });
+        const text = result.text;
 
-        // Clean markdown
-        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        const data = JSON.parse(jsonStr);
+        // Robust JSON extraction
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error("No JSON found in response");
 
-        // Auto-generate Image URL using the visual prompt
+        const data = JSON.parse(jsonMatch[0]);
+
+        // Auto-generate Image URL
         let imageUrl = '';
-        if (data.visual_prompt) {
-            console.log("Visual Prompt:", data.visual_prompt);
-            // Truncate to avoid URL length issues and ensure keyword "food" is first
-            const shortPrompt = (data.visual_prompt || "").substring(0, 100);
-            const finalPrompt = `delicious food dish, ${shortPrompt}`;
-            const encodedPrompt = encodeURIComponent(finalPrompt);
+        if (data.visual_prompt || data.name) {
+            // Optimized for speed to avoid 524 Timeouts
+            // Use title as primary anchor, plus a short visual description
+            const title = (data.name || "food").replace(/[^\w\s]/gi, ''); // Clean title
+            const shortPrompt = (data.visual_prompt || "").substring(0, 150).trim();
 
-            // Minimal URL for maximum compatibility
+            const finalPrompt = `professional food photography of ${title}, ${shortPrompt}, cinematic lighting`;
+            const encodedPrompt = encodeURIComponent(finalPrompt);
             imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true`;
         }
 
@@ -123,13 +134,10 @@ export async function generateFullRecipe(title, description = '') {
 }
 
 /**
- * Uses Gemini to interpret a natural language search query.
- * Returns structured parameters for DB filtering.
+ * Uses Gemini to interpret a search query.
  */
 export async function understandRecipeQuery(userQuery) {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Consistent model usage
-
         const prompt = `
             You are a search parser for a recipe app. 
             User Query: "${userQuery}"
@@ -142,52 +150,41 @@ export async function understandRecipeQuery(userQuery) {
                 "include_ingredients": ["list", "of", "ingredients", "to", "must", "have"]
             }
             If the user doesn't specify a type, use "any".
-            If text_search is redundant with type (e.g. "show me breakfast"), text_search can be empty string.
          `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const result = await generateSafe(prompt, { responseMimeType: "application/json" });
+        const text = result.text;
 
-        // Clean markdown if present
-        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        return JSON.parse(jsonStr);
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        return jsonMatch ? JSON.parse(jsonMatch[0]) : { text_search: userQuery, type: 'any' };
 
     } catch (error) {
         console.error("Gemini Search Error:", error);
-        // Fallback: simple text search
         return { text_search: userQuery, type: 'any', exclude_ingredients: [], include_ingredients: [] };
     }
 }
 
 export async function generateNewsletterContent(recipes) {
     const recipeNames = recipes.map(r => r.name).join(", ");
-
     const prompt = `
     You are the editor of the "Nouriva Club" newsletter. 
     Write a short, engaging email intro for this week's meal plan.
-    
-    The featured recipes are: ${recipeNames}.
-    
-    Tone: Warm, encouraging, focused on "Vibrant Living" and "Keto/Low-Carb" health benefits.
-    Style: Minimalist but inspiring. "Nouriva Vision".
+    Featured recipes: ${recipeNames}.
+    Tone: Warm, encouraging, focused on "Vibrant Living" and "Keto/Low-Carb".
     
     Output Format (JSON):
     {
       "subject": "A catchy, short subject line (max 6 words)",
-      "intro": "A 100-150 word intro paragraph connecting these meals to a theme (e.g., energy, focus, comfort)."
+      "intro": "A 100-150 word intro paragraph."
     }
-  `;
+    `;
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const result = await generateSafe(prompt, { responseMimeType: "application/json" });
+        const text = result.text;
 
-        // Clean JSON markdown
-        const jsonString = text.replace(/```json|```/g, '').trim();
-        return JSON.parse(jsonString);
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text); // Fallback to raw text if regex fails but maybe simple JSON
     } catch (error) {
         console.error("Gemini Newsletter Error:", error);
         return {

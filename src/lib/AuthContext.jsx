@@ -70,9 +70,9 @@ export const AuthProvider = ({ children }) => {
 
     const fetchProfile = async (userId, currentUser) => {
         try {
-            // 15s timeout to prevent infinite loading state
+            // 30s timeout - increased to prevent premature failures on slow connections
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Profile fetch timed out (15s)')), 15000)
+                setTimeout(() => reject(new Error('Profile fetch timed out (30s)')), 30000)
             );
 
             const dbPromise = supabase
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
             const isHardcodedAdmin = currentUser?.email === 'nestor.rojas@live.com';
 
             if (error) {
-                console.error('Error fetching profile:', error);
+                console.warn('AuthContext: Profile fetch issue (using standard role):', error.message);
                 if (isHardcodedAdmin) role = 'admin';
             } else {
                 setProfile(data);
@@ -97,11 +97,22 @@ export const AuthProvider = ({ children }) => {
                     role = 'premium';
                 }
             }
+
             console.log("AuthContext: Role determined:", role);
             setUserRole(role);
             setIsAdmin(role === 'admin');
+
+            // --- STRICT MEMBERSHIP GUARD ---
+            // If user exists (signed in) but is NOT premium/admin, they are not a "Member".
+            // Force redirect to Pricing Page to complete signup.
+            const isPremiumOrAdmin = role === 'admin' || role === 'premium';
+            if (!isPremiumOrAdmin && !window.location.pathname.includes('/app/subscribe')) {
+                console.log("AuthContext: User is not premium. Redirecting to Join Club...");
+                window.location.href = '/app/subscribe';
+            }
+
         } catch (err) {
-            console.error("AuthContext: fetchProfile CRASH", err);
+            console.warn("AuthContext: Profile fetch validation failed (non-fatal):", err.message);
             // Fallback for crash
             setUserRole('standard');
         } finally {
