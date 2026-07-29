@@ -164,15 +164,15 @@ function PricingPage() {
     if (isPremium) {
         return (
             <div className="min-h-screen bg-nouriva-cream flex items-center justify-center p-4">
-                <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg text-center">
-                    <h1 className="text-3xl font-bold text-emerald-800 mb-4">You're already in! 🎉</h1>
+                <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-lg text-center border border-gray-100">
+                    <h1 className="text-3xl font-bold text-nouriva-green mb-4">You're already in! 🎉</h1>
                     <p className="text-gray-600 mb-8">
                         You are a valued member of the Nouriva Club. Enjoy your exclusive access.
                     </p>
                     <div className="space-y-4">
                         <Link
                             to="/app/home"
-                            className="block w-full py-3 px-6 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition"
+                            className="block w-full py-3 px-6 rounded-xl bg-nouriva-green text-white font-bold hover:bg-nouriva-green/90 transition"
                         >
                             Go to Recipes
                         </Link>
@@ -232,19 +232,19 @@ function PricingPage() {
                         {!showVerify ? (
                             <form onSubmit={handleJoinClub} className="space-y-4 animate-fadeIn">
                                 <div>
-                                    <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Your Name</label>
+                                    <label className="block text-xs font-bold text-nouriva-cream/80 uppercase mb-1">Your Name</label>
                                     <input
                                         type="text"
                                         required
                                         value={fullName}
                                         onChange={e => setFullName(e.target.value)}
                                         placeholder="Jane Doe"
-                                        className="w-full p-3 rounded bg-emerald-800 border border-emerald-700 text-white placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold"
+                                        className="w-full p-3 rounded-xl bg-nouriva-green border border-nouriva-green/50 text-white placeholder-nouriva-cream/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Email</label>
+                                    <label className="block text-xs font-bold text-nouriva-cream/80 uppercase mb-1">Email</label>
                                     <input
                                         type="email"
                                         required
@@ -252,11 +252,11 @@ function PricingPage() {
                                         onChange={e => !user && setEmail(e.target.value)}
                                         disabled={!!user}
                                         placeholder="you@example.com"
-                                        className={`w-full p-3 rounded bg-emerald-800 border ${user ? 'border-emerald-700/50 text-emerald-300' : 'border-emerald-700 text-white'} placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold`}
+                                        className={`w-full p-3 rounded-xl bg-nouriva-green border ${user ? 'border-nouriva-green/30 text-nouriva-cream/80' : 'border-nouriva-green/50 text-white'} placeholder-nouriva-cream/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold`}
                                     />
                                 </div>
 
-                                <ul className="space-y-2 mb-6 text-emerald-100 text-sm">
+                                <ul className="space-y-2 mb-6 text-nouriva-cream/90 text-sm">
                                     <li>✓ <strong>Unlock ALL Recipes</strong></li>
                                     <li>✓ <strong>Weekly Newsletter</strong></li>
                                 </ul>
@@ -264,7 +264,7 @@ function PricingPage() {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
+                                    className="w-full py-4 px-6 rounded-xl bg-nouriva-gold text-white font-bold text-lg hover:bg-yellow-600 transition shadow-lg flex justify-center items-center"
                                 >
                                     {loading ? (
                                         <span className="animate-pulse">Processing...</span>
@@ -275,13 +275,13 @@ function PricingPage() {
                             </form>
                         ) : (
                             <form onSubmit={handleVerifyOtp} className="space-y-4 animate-fadeIn">
-                                <div className="p-4 bg-emerald-800/50 rounded-lg border border-emerald-500/30 text-center mb-4">
-                                    <p className="text-sm text-emerald-200 mb-1">Enter the code sent to</p>
+                                <div className="p-4 bg-nouriva-green/50 rounded-xl border border-nouriva-green/30 text-center mb-4">
+                                    <p className="text-sm text-nouriva-cream/80 mb-1">Enter the code sent to</p>
                                     <p className="font-bold text-white">{email}</p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-bold text-emerald-200 uppercase mb-1">Verification Code</label>
+                                    <label className="block text-xs font-bold text-nouriva-cream/80 uppercase mb-1">Verification Code</label>
                                     <input
                                         type="text"
                                         required
@@ -289,14 +289,14 @@ function PricingPage() {
                                         value={otp}
                                         onChange={e => setOtp(e.target.value)}
                                         placeholder="123456"
-                                        className="w-full p-3 rounded bg-emerald-800 border border-emerald-700 text-white placeholder-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold text-center tracking-widest text-xl font-mono"
+                                        className="w-full p-3 rounded-xl bg-nouriva-green border border-nouriva-green/50 text-white placeholder-nouriva-cream/50 focus:outline-none focus:ring-2 focus:ring-nouriva-gold text-center tracking-widest text-xl font-mono"
                                     />
                                 </div>
 
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
+                                    className="w-full py-4 px-6 rounded-xl bg-nouriva-gold text-white font-bold text-lg hover:bg-yellow-500 transition shadow-lg flex justify-center items-center"
                                 >
                                     {loading ? "Verifying..." : "Verify & Join Club"}
                                 </button>

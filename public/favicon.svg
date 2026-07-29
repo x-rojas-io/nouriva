@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+    {/* Abstract Organic Leaf + Bowl Icon */}
+    {/* Main Leaf Body in Forest Green */}
+    <path 
+        d="M24 11C16 15 12 23 14 31C16 39 24 41 32 37C38 33 42 25 40 17C38 9 30 7 24 11Z" 
+        fill="#062e33" 
+    />
+    {/* Inner Curved Leaf/Ribbon Accent in Champagne Gold */}
+    <path 
+        d="M30 14C36 19 36 27 31 33C26 29 24 21 30 14Z" 
+        fill="#c29f63" 
+    />
+    {/* Micro leaf dot/bud accent */}
+    <circle cx="38" cy="13" r="3.5" fill="#c29f63" />
+</svg>

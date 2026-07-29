@@ -127,8 +127,8 @@ function LoginPage() {
                     Enter your email to access the club.
                 </p>
 
-                <div className="mb-8 p-3 bg-emerald-50 rounded-lg border border-emerald-100 text-sm">
-                    Not a member yet? <a href="/app/subscribe" className="text-emerald-700 font-bold underline hover:text-emerald-900">Join the Club</a>
+                <div className="mb-8 p-3 bg-nouriva-cream rounded-lg border border-gray-100 text-sm">
+                    Not a member yet? <a href="/app/subscribe" className="text-nouriva-green font-bold underline hover:text-nouriva-gold">Join the Club</a>
                 </div>
 
                 {!showVerify && (

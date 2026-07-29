@@ -3,9 +3,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'nouriva-green': '#2F855A',
-        'nouriva-cream': '#F7F9F0',
-        'nouriva-gold': '#C8A210',
+        'nouriva-green': '#062e33',
+        'nouriva-cream': '#fbfbfa',
+        'nouriva-gold': '#c29f63',
+        'nouriva-charcoal': '#2a2724',
       },
       animation: {
         'fadeIn': 'fadeIn 0.3s ease-out',

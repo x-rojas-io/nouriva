@@ -34,7 +34,7 @@ function MealsPage() {
   }, [mealId]);
 
   if (loading || authLoading) return (
-    <div className="min-h-screen bg-lime-50 text-gray-800 p-8 animate-pulse">
+    <div className="min-h-screen bg-nouriva-cream text-nouriva-charcoal p-8 animate-pulse">
       {/* Header Skeleton */}
       <div className="flex justify-between items-center mb-6">
         <div className="h-6 w-20 bg-gray-300 rounded"></div>
@@ -76,18 +76,18 @@ function MealsPage() {
   const isLocked = meal.is_premium && !isPremium;
 
   return (
-    <div className="min-h-screen bg-lime-50 text-gray-800 p-8">
+    <div className="min-h-screen bg-nouriva-cream text-nouriva-charcoal p-8">
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="text-emerald-600 font-medium hover:underline"
+          className="text-nouriva-green font-medium hover:underline"
         >
           ← Back
         </button>
-        <h1 className="text-2xl font-bold text-center text-emerald-700 flex-grow">
+        <h1 className="text-2xl font-bold text-center text-nouriva-green flex-grow">
           {meal.name}
           {meal.is_premium && (
-            <span className="ml-2 bg-nouriva-gold text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide shadow-sm align-middle">
+            <span className="ml-2 bg-nouriva-gold text-white text-[10px] px-2.5 py-1 rounded-full font-bold tracking-wide shadow-sm align-middle">
               👑 CLUB EXCLUSIVE
             </span>
           )}
@@ -98,16 +98,16 @@ function MealsPage() {
       {isLocked ? (
         <PremiumLock title={meal.name} />
       ) : (
-        <div className="md:flex md:gap-6 bg-white border-l-4 border-emerald-500 p-6 rounded shadow">
+        <div className="md:flex md:gap-6 bg-white border-l-4 border-nouriva-green p-6 rounded-2xl shadow">
           {meal.image && (
             <img
               src={meal.image}
               alt={meal.name}
-              className="w-full md:w-72 h-60 object-cover rounded mb-4 md:mb-0"
+              className="w-full md:w-72 h-60 object-cover rounded-xl mb-4 md:mb-0"
             />
           )}
           <div className="flex-1">
-            <h2 className="text-lg font-semibold text-amber-600 mb-2">
+            <h2 className="text-lg font-semibold text-nouriva-gold mb-2">
               Ingredients
             </h2>
             <ul className="list-disc pl-5 text-sm text-gray-700 mb-4">
@@ -118,10 +118,10 @@ function MealsPage() {
               ))}
             </ul>
 
-            <h2 className="text-lg font-semibold text-amber-600 mb-2">
+            <h2 className="text-lg font-semibold text-nouriva-gold mb-2">
               Steps
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-2 text-sm text-gray-700 leading-relaxed">
               {meal.steps.map((step, index) => (
                 <p key={index}>{step}</p>
               ))}

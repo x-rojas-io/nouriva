@@ -33,10 +33,12 @@ export default function MyRecipesPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-lime-50 p-8">
-                <h1 className="text-3xl font-bold text-center text-emerald-700 mb-8">
-                    My Custom Recipes
-                </h1>
+            <div className="min-h-screen bg-nouriva-cream p-8">
+                <div className="max-w-6xl mx-auto text-center mb-8">
+                    <h1 className="text-3xl font-black text-nouriva-green uppercase tracking-tight">
+                        My Custom Recipes
+                    </h1>
+                </div>
                 <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                     <RecipeCardSkeleton />
                     <RecipeCardSkeleton />
@@ -47,30 +49,30 @@ export default function MyRecipesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-lime-50 p-8">
+        <div className="min-h-screen bg-nouriva-cream text-nouriva-charcoal p-8">
             <div className="max-w-6xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-emerald-700">
+                <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+                    <h1 className="text-3xl font-black text-nouriva-green uppercase tracking-tight">
                         My Custom Recipes
                     </h1>
                     <Link 
                         to="/app/home" 
-                        className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-full shadow transition"
+                        className="px-5 py-2.5 bg-nouriva-green hover:bg-emerald-800 text-white font-bold rounded-full shadow transition"
                     >
                         + Create Recipe
                     </Link>
                 </div>
 
                 {recipes.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-xl mx-auto">
+                    <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 p-8 max-w-xl mx-auto">
                         <div className="text-6xl mb-4">🍳</div>
                         <h3 className="text-xl font-bold text-gray-800 mb-2">No custom recipes yet</h3>
-                        <p className="text-gray-500 mb-6">
+                        <p className="text-gray-500 mb-6 text-sm">
                             Craving something special? Use our AI Chef on the homepage to generate and save your custom meal plans instantly.
                         </p>
                         <Link 
                             to="/app/home" 
-                            className="inline-block px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-bold rounded-full shadow-lg transition"
+                            className="inline-block px-6 py-3 bg-nouriva-green hover:bg-emerald-800 text-white font-bold rounded-full shadow transition"
                         >
                             Open AI Chef 🪄
                         </Link>
@@ -80,25 +82,27 @@ export default function MyRecipesPage() {
                         {recipes.map(recipe => (
                             <div 
                                 key={recipe.id} 
-                                className="bg-white rounded-xl shadow overflow-hidden transform hover:scale-[1.02] transition duration-200"
+                                className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-nouriva-green/20 hover:shadow-lg transition duration-300 flex flex-col justify-between"
                             >
-                                <p className="bg-gray-100 text-xs uppercase font-semibold text-gray-700 px-3 py-2 flex justify-between">
-                                    <span>{recipe.type}</span>
-                                    <span className="text-[10px] text-emerald-600 font-bold">
-                                        ✨ CUSTOM
-                                    </span>
-                                </p>
-                                <Link to={`/app/meal/${recipe.id}`}>
-                                    {recipe.image ? (
-                                        <img src={recipe.image} alt={recipe.name} className="w-full h-48 object-cover" />
-                                    ) : (
-                                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">No Image</div>
-                                    )}
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-extrabold text-gray-900 mb-1">{recipe.name}</h3>
-                                        <p className="text-gray-500 text-sm line-clamp-2">{recipe.description}</p>
-                                    </div>
-                                </Link>
+                                <div>
+                                    <p className="bg-nouriva-cream text-xs uppercase font-bold text-gray-500 px-4 py-3 flex justify-between border-b border-gray-50">
+                                        <span>{recipe.type}</span>
+                                        <span className="text-nouriva-green font-extrabold">
+                                            ✨ CUSTOM
+                                        </span>
+                                    </p>
+                                    <Link to={`/app/meal/${recipe.id}`}>
+                                        {recipe.image ? (
+                                            <img src={recipe.image} alt={recipe.name} className="w-full h-56 object-cover" />
+                                        ) : (
+                                            <div className="w-full h-56 bg-gray-50 flex items-center justify-center text-gray-400">No Image</div>
+                                        )}
+                                        <div className="p-6">
+                                            <h3 className="text-lg font-bold text-nouriva-charcoal hover:text-nouriva-green transition-colors mb-2">{recipe.name}</h3>
+                                            <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">{recipe.description}</p>
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
                         ))}
                     </div>

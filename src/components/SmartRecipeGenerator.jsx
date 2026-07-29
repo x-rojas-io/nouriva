@@ -216,15 +216,15 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
     if (!isOpen) {
         return (
             <div 
-                className="mb-8 p-6 bg-gradient-to-r from-emerald-600 to-teal-500 rounded-2xl shadow-lg text-white text-center transform hover:scale-[1.01] transition-all cursor-pointer" 
+                className="mb-8 p-6 bg-gradient-to-r from-nouriva-green to-teal-700 rounded-3xl shadow-lg text-white text-center transform hover:scale-[1.01] transition-all cursor-pointer" 
                 onClick={handleOpen}
             >
                 <div className="text-4xl mb-2">✨</div>
                 <h2 className="text-2xl font-bold mb-1">Create Your Dream Meal</h2>
-                <p className="text-emerald-50 opacity-90">
+                <p className="text-nouriva-cream/90 opacity-95">
                     Tell our AI Chef what you're craving, and we'll generate a full recipe instantly.
                 </p>
-                <button className="mt-4 px-6 py-2 bg-white text-emerald-700 font-bold rounded-full shadow hover:bg-emerald-50 transition">
+                <button className="mt-4 px-6 py-2 bg-white text-nouriva-green font-bold rounded-full shadow hover:bg-nouriva-cream transition">
                     Start Cooking
                 </button>
             </div>
@@ -288,7 +288,7 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
                                             if (errorMsg) setErrorMsg('');
                                         }}
                                         placeholder="I want a spicy beef steak with asparagus..."
-                                        className="w-full h-32 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none text-lg text-gray-800"
+                                        className="w-full h-32 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-nouriva-green focus:border-transparent resize-none text-lg text-gray-800 bg-transparent"
                                         autoFocus
                                     />
                                     <div className="text-sm text-gray-500">
@@ -296,7 +296,7 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
                                     </div>
                                     <button
                                         onClick={handleGenerate}
-                                        className="w-full py-4 bg-emerald-600 text-white text-xl font-bold rounded-xl hover:bg-emerald-700 transition shadow-lg flex justify-center items-center gap-2"
+                                        className="w-full py-4 bg-nouriva-green text-white text-xl font-bold rounded-xl hover:bg-nouriva-green/90 transition shadow-lg flex justify-center items-center gap-2"
                                     >
                                         Generate Recipe 🪄
                                     </button>

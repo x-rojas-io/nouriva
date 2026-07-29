@@ -118,22 +118,22 @@ function Dashboard() {
                         )}
                     </div>
                     <div className="p-4 bg-gray-50 text-center border-t">
-                        <Link to="/admin/recipes" className="text-sm text-emerald-600 font-bold hover:underline">View All Recipes</Link>
+                        <Link to="/admin/recipes" className="text-sm text-nouriva-green font-bold hover:underline">View All Recipes</Link>
                     </div>
                 </div>
 
                 {/* Quick Actions */}
-                <div className="bg-gradient-to-br from-emerald-700 to-teal-800 text-white rounded-lg shadow-md p-6 h-fit">
+                <div className="bg-gradient-to-br from-nouriva-green to-teal-900 text-white rounded-lg shadow-md p-6 h-fit">
                     <h3 className="font-bold text-xl mb-4">Quick Actions</h3>
                     <div className="space-y-3">
-                        <Link to="/admin/recipes/new" className="block w-full bg-white text-emerald-800 px-4 py-3 rounded font-bold shadow hover:bg-gray-100 text-center transition">
+                        <Link to="/admin/recipes/new" className="block w-full bg-white text-nouriva-green px-4 py-3 rounded font-bold shadow hover:bg-gray-100 text-center transition">
                             + New Recipe
                         </Link>
-                        <Link to="/admin/newsletter" className="block w-full bg-nouriva-gold text-emerald-900 px-4 py-3 rounded font-bold shadow hover:bg-yellow-500 text-center transition">
+                        <Link to="/admin/newsletter" className="block w-full bg-nouriva-gold text-white px-4 py-3 rounded font-bold shadow hover:bg-yellow-600 text-center transition">
                             📧 Newsletter Engine
                         </Link>
                         {/* 
-                        <Link to="/admin/users" className="block w-full bg-emerald-800/50 text-white border border-emerald-500 px-4 py-3 rounded font-bold hover:bg-emerald-700 text-center transition">
+                        <Link to="/admin/users" className="block w-full bg-emerald-800/50 text-white border border-emerald-500 px-4 py-3 rounded font-bold hover:bg-nouriva-green text-center transition">
                              Manage Users
                         </Link> 
                         */}

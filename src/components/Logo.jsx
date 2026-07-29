@@ -4,28 +4,38 @@ const Logo = ({ className = "h-8 w-auto" }) => {
     return (
         <svg
             className={className}
-            viewBox="0 0 200 50"
+            viewBox="0 0 220 50"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             aria-label="Nouriva Logo"
         >
-            <path
-                d="M25 10C15 10 10 20 10 25C10 30 15 40 25 40C35 40 40 30 40 25C40 20 35 10 25 10Z"
-                fill="#10B981"
-                className="text-emerald-500"
-            />
-            <path
-                d="M25 15C18 15 15 22 15 25C15 28 18 35 25 35C32 35 35 28 35 25C35 22 32 15 25 15Z"
-                fill="white"
-            />
-            <path
-                d="M25 20L30 30H20L25 20Z"
-                fill="#F59E0B"
-                className="text-amber-500"
-            />
-
-            <text x="55" y="32" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" fill="#10B981" letterSpacing="1">
-                NOURIVA
+            {/* Abstract Organic Leaf + Bowl Icon */}
+            <g transform="translate(5, 0)">
+                {/* Main Leaf Body in Forest Green */}
+                <path 
+                    d="M20 12C12 16 8 24 10 32C12 40 20 42 28 38C34 34 38 26 36 18C34 10 26 8 20 12Z" 
+                    fill="#062e33" 
+                />
+                {/* Inner Curved Leaf/Ribbon Accent in Champagne Gold */}
+                <path 
+                    d="M26 15C32 20 32 28 27 34C22 30 20 22 26 15Z" 
+                    fill="#c29f63" 
+                />
+                {/* Micro leaf dot/bud accent */}
+                <circle cx="34" cy="14" r="3.5" fill="#c29f63" />
+            </g>
+            
+            {/* Brand Text styled in Outfit font with premium split colors */}
+            <text 
+                x="55" 
+                y="33" 
+                fontFamily="Outfit, sans-serif" 
+                fontSize="23" 
+                fontWeight="900" 
+                letterSpacing="2.5"
+            >
+                <tspan fill="#062e33">NOURI</tspan>
+                <tspan fill="#c29f63">VA</tspan>
             </text>
         </svg>
     );

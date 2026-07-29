@@ -10,6 +10,8 @@ import RecipeCardSkeleton from "../components/RecipeCardSkeleton";
 function HomePage() {
   const { user, profile, isPremium, refreshProfile } = useAuth();
   const { toast } = useToast();
+  
+  // Data State
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,6 +19,10 @@ function HomePage() {
   const [isSearching, setIsSearching] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
   const [newFav, setNewFav] = useState("");
+
+  // Revamped UI States
+  const [activeDay, setActiveDay] = useState(0);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     async function fetchMenu() {
@@ -187,251 +193,293 @@ function HomePage() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-lime-50 text-gray-800 p-8">
-      <h1 className="text-3xl font-bold text-center text-emerald-700 mb-8">
-        Nouriva Club
-      </h1>
-      {/* Skeleton for 2 days */}
-      {[1, 2].map((day) => (
-        <div key={day} className="mb-12">
-          <div className="h-6 w-16 bg-gray-200 rounded mb-4 animate-pulse" />
-          <div className="grid md:grid-cols-3 gap-6">
-            <RecipeCardSkeleton />
-            <RecipeCardSkeleton />
-            <RecipeCardSkeleton />
-          </div>
-        </div>
-      ))}
+    <div className="min-h-screen bg-nouriva-cream text-nouriva-charcoal p-8 flex flex-col items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-nouriva-green"></div>
+      <p className="text-gray-500 mt-4 tracking-wider uppercase text-sm">Curating Your Selection...</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-lime-50 text-gray-800 p-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-emerald-700">
+    <div className="min-h-screen bg-nouriva-cream text-nouriva-charcoal p-8">
+      {/* Brand Header */}
+      <div className="max-w-6xl mx-auto text-center mb-12">
+        <h1 className="text-4xl md:text-5xl font-black text-nouriva-green tracking-tight uppercase">
           Nouriva Club
         </h1>
+        <p className="text-gray-400 text-xs mt-2 tracking-widest uppercase font-medium">
+          Curated Culinary Selections
+        </p>
+        
         {user && (
-          <div className="mt-4 bg-emerald-100 border border-emerald-300 rounded-lg p-4 inline-block max-w-2xl mx-auto">
-            <h2 className="text-emerald-800 font-bold">Welcome back!</h2>
-            <p className="text-emerald-700 text-sm">
-              {isPremium
-                ? '✨ Premium Member Access Unlocked'
-                : (
-                  <Link to="/app/subscribe" className="underline font-bold hover:text-emerald-900">
-                    Join the Club for full access to all recipes!
-                  </Link>
-                )}
-            </p>
-            {isPremium && (
-              <div className="mt-2 text-xs text-emerald-600 bg-white/50 px-2 py-1 rounded inline-block">
-                All locked recipes are now open for you. Enjoy! 🥑
-              </div>
-            )}
+          <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-4 bg-white px-6 py-3 rounded-full border border-gray-100 shadow-sm text-sm">
+            <span className="font-semibold text-nouriva-charcoal">
+              Welcome, {profile?.full_name || user.email}!
+            </span>
+            <span className="text-gray-200">|</span>
+            <span className="text-nouriva-gold font-bold flex items-center gap-1">
+              {isPremium ? '✨ CLUB MEMBER' : 'STANDARD MEMBER'}
+            </span>
+            <span className="text-gray-200">|</span>
+            <button 
+              onClick={() => setIsDrawerOpen(true)}
+              className="text-nouriva-green font-bold hover:text-nouriva-gold flex items-center gap-1 transition-colors"
+            >
+              🥑 Customize Taste
+            </button>
           </div>
         )}
       </div>
 
-      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 mb-8">
-        {/* Left Column: AI Chef & search */}
-        <div className="md:col-span-2 space-y-6">
+      {/* Main Single Column Feed */}
+      <div className="max-w-4xl mx-auto space-y-12">
+        {/* Interactive Chef Widget & Search */}
+        <div className="space-y-8 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
           <SmartRecipeGenerator />
           <SmartSearchBar onSearch={handleSearch} loading={isSearching} />
         </div>
 
-        {/* Right Column: User preferences widget */}
-        {user && (
-          <div className="bg-white p-6 rounded-2xl border border-emerald-100 shadow-sm flex flex-col justify-between">
-            <div>
-              <h3 className="font-bold text-emerald-800 text-lg flex items-center gap-2 mb-2">
-                🥑 Preferred Ingredients
-              </h3>
-              <p className="text-gray-500 text-xs mb-4">
-                Tell us what ingredients you love. We'll recommend and sort recipes matching them first!
-              </p>
-              
-              {/* Preferred Tags */}
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {(profile?.preferences?.favorite_ingredients || []).map((fav, idx) => (
-                  <span 
-                    key={idx} 
-                    className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition cursor-pointer" 
-                    onClick={() => removeFavoriteIngredient(fav)}
-                    title="Click to remove"
-                  >
-                    {fav} <span className="text-[9px]">✕</span>
-                  </span>
-                ))}
-                {(profile?.preferences?.favorite_ingredients || []).length === 0 && (
-                  <span className="text-gray-400 text-xs italic">No favorites added yet.</span>
-                )}
-              </div>
-            </div>
+        {searchQuery && searchQuery.length >= 5 ? (
+          // --- SEARCH RESULTS VIEW ---
+          <div>
+            <h2 className="text-2xl font-bold text-nouriva-green tracking-wide uppercase mb-6">
+              Results for "{searchQuery}" {!isSearching && <span className="text-sm font-normal text-gray-500">({searchResults?.length || 0} found)</span>}
+            </h2>
 
-            {/* Input Form */}
-            <form onSubmit={addFavoriteIngredient} className="flex gap-2 mt-4">
-              <input
-                type="text"
-                value={newFav}
-                onChange={e => setNewFav(e.target.value)}
-                placeholder="e.g. bacon"
-                className="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 text-gray-800"
-              />
-              <button 
-                type="submit" 
-                className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold transition shadow"
-              >
-                Add
-              </button>
-            </form>
-          </div>
-        )}
-      </div>
-
-      {searchQuery && searchQuery.length >= 5 ? (
-        // --- SEARCH RESULTS VIEW ---
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-700 mb-6">
-            Results for "{searchQuery}" {!isSearching && <span className="text-sm font-normal text-gray-500">({searchResults?.length || 0} found)</span>}
-          </h2>
-
-          {isSearching ? (
-            <div className="grid md:grid-cols-3 gap-6">
-              <RecipeCardSkeleton />
-              <RecipeCardSkeleton />
-              <RecipeCardSkeleton />
-            </div>
-          ) : searchResults && searchResults.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-6">
-              {searchResults.map(meal => (
-                <div key={meal.id} className="bg-white rounded-xl shadow overflow-hidden transform hover:scale-105 transition duration-200">
-                  <p className="bg-gray-100 text-xs uppercase font-semibold text-gray-700 px-3 py-2 flex justify-between">
-                    <span>{meal.type}</span>
-                    {meal.is_premium && (
-                      <span className="bg-nouriva-gold text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide shadow-sm">
-                        👑 CLUB EXCLUSIVE
-                      </span>
-                    )}
-                  </p>
-                  <Link to={`/app/meal/${meal.id}`}>
-                    {meal.image ? (
-                      <img src={meal.image} alt={meal.name} className="w-full h-48 object-cover" />
-                    ) : (
-                      <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">No Image</div>
-                    )}
-                    <div className="p-4">
-                      <h3 className="text-lg font-extrabold text-gray-900 mb-1">{meal.name}</h3>
-                      <p className="text-gray-500 text-sm line-clamp-2">{meal.description}</p>
-                    </div>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-10 text-gray-500">
-              No recipes found matching your criteria. Try a different search!
-            </div>
-          )}
-        </div>
-      ) : (
-        // --- DEFAULT MENU VIEW ---
-        <div className="max-w-6xl mx-auto space-y-8">
-          {/* Custom Recommendations Sub-section */}
-          {recommendations.length > 0 && (
-            <div className="p-6 bg-gradient-to-br from-emerald-50 to-teal-50/50 rounded-2xl border border-emerald-100">
-              <h2 className="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-2">
-                ✨ Tailored for Your Taste
-              </h2>
+            {isSearching ? (
               <div className="grid md:grid-cols-3 gap-6">
-                {recommendations.map(meal => (
-                  <div key={meal.id} className="bg-white rounded-xl shadow border border-emerald-100/50 overflow-hidden transform hover:scale-[1.02] transition duration-200">
-                    <p className="bg-emerald-50 text-xs uppercase font-semibold text-emerald-700 px-3 py-2 flex justify-between">
+                <RecipeCardSkeleton />
+                <RecipeCardSkeleton />
+                <RecipeCardSkeleton />
+              </div>
+            ) : searchResults && searchResults.length > 0 ? (
+              <div className="grid md:grid-cols-3 gap-6">
+                {searchResults.map(meal => (
+                  <div key={meal.id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-nouriva-green/20 hover:shadow-lg transition duration-300">
+                    <p className="bg-nouriva-cream text-xs uppercase font-bold text-gray-500 px-4 py-3 flex justify-between border-b border-gray-50">
                       <span>{meal.type}</span>
-                      <span className="bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                        PREFERENCE MATCH
-                      </span>
+                      {meal.is_premium && (
+                        <span className="text-nouriva-gold font-extrabold tracking-wide">
+                          👑 CLUB
+                        </span>
+                      )}
                     </p>
                     <Link to={`/app/meal/${meal.id}`}>
                       {meal.image ? (
-                        <img src={meal.image} alt={meal.name} className="w-full h-48 object-cover" />
+                        <img src={meal.image} alt={meal.name} className="w-full h-56 object-cover" />
                       ) : (
-                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">No Image</div>
+                        <div className="w-full h-56 bg-gray-50 flex items-center justify-center text-gray-400">No Image</div>
                       )}
-                      <div className="p-4">
-                        <h3 className="text-lg font-extrabold text-gray-900 mb-1">{meal.name}</h3>
-                        <p className="text-gray-500 text-sm line-clamp-2">{meal.description}</p>
+                      <div className="p-6">
+                        <h3 className="text-lg font-bold text-nouriva-charcoal hover:text-nouriva-green transition-colors mb-2">{meal.name}</h3>
+                        <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">{meal.description}</p>
                       </div>
                     </Link>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* 7-Day Menu View */}
-          <div>
-            {menu.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-2xl border border-gray-100">
-                <div className="text-6xl mb-4">🥗</div>
-                <h3 className="text-xl font-bold text-gray-600">No Weekly Menu Available Yet</h3>
-                <p className="text-gray-500">Check back later or browse individual snacks.</p>
-                {user ? (
-                  <div className="mt-4 text-sm text-gray-400">Admin: Go to Admin Panel to add Breakfast, Lunch, and Dinner recipes to populate this.</div>
-                ) : null}
-              </div>
             ) : (
-              menu.map((day, index) => (
-                <div key={index} className="mb-12">
-                  <h2 className="text-xl font-semibold text-amber-600 mb-4">
-                    Day {index + 1}
-                  </h2>
-                  <div className="grid md:grid-cols-3 gap-6">
-                    {["breakfast", "lunch", "dinner"].map((type) => {
-                      const meal = day[type];
-                      return (
-                        <div
-                          key={meal.id}
-                          className="bg-white rounded-xl shadow overflow-hidden transform hover:scale-[1.02] transition duration-200"
-                        >
-                          <p className="bg-gray-100 text-xs uppercase font-semibold text-gray-700 px-3 py-2 flex justify-between">
-                            <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                            {meal.is_premium && (
-                              <span className="bg-nouriva-gold text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide shadow-sm">
-                                👑 CLUB EXCLUSIVE
-                              </span>
-                            )}
-                          </p>
-
-                          <Link to={`/app/meal/${meal.id}`}>
-                            {meal.image ? (
-                              <img
-                                src={meal.image}
-                                alt={meal.name}
-                                className="w-full h-48 object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">No Image</div>
-                            )}
-                            <div className="p-4">
-                              <h3 className="text-lg font-extrabold text-gray-900 mb-1">
-                                {meal.name}
-                              </h3>
-                              <p className="text-gray-500 text-sm line-clamp-2 mb-3">{meal.description}</p>
-                              <div className="flex items-center text-xs text-gray-400">
-                                <svg className="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M6 2a2 2 0 00-2 2v2h12V4a2 2 0 00-2-2H6zM4 8v8a2 2 0 002 2h8a2 2 0 002-2V8H4z" />
-                                </svg>
-                                1 adult serving.
-                              </div>
-                            </div>
-                          </Link>
+              <div className="text-center py-12 text-gray-500 bg-white rounded-2xl border border-gray-100">
+                No recipes found matching your criteria. Try another keyword!
+              </div>
+            )}
+          </div>
+        ) : (
+          // --- DEFAULT MENU VIEW ---
+          <div className="space-y-12">
+            {/* Custom Recommendations Sub-section */}
+            {recommendations.length > 0 && (
+              <div className="p-8 bg-gradient-to-br from-emerald-50/30 to-teal-50/10 rounded-3xl border border-emerald-100/50">
+                <h2 className="text-lg font-bold text-nouriva-green tracking-wider uppercase mb-6 flex items-center gap-2">
+                  ✨ Tailored for Your Taste
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {recommendations.map(meal => (
+                    <div key={meal.id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-nouriva-green/20 hover:shadow-lg transition duration-300">
+                      <p className="bg-nouriva-cream text-xs uppercase font-bold text-nouriva-gold px-4 py-3 flex justify-between border-b border-gray-50">
+                        <span>{meal.type}</span>
+                        <span className="font-extrabold tracking-wide">RECOMMENDED</span>
+                      </p>
+                      <Link to={`/app/meal/${meal.id}`}>
+                        {meal.image ? (
+                          <img src={meal.image} alt={meal.name} className="w-full h-56 object-cover" />
+                        ) : (
+                          <div className="w-full h-56 bg-gray-50 flex items-center justify-center text-gray-400">No Image</div>
+                        )}
+                        <div className="p-6">
+                          <h3 className="text-lg font-bold text-nouriva-charcoal hover:text-nouriva-green transition-colors mb-2">{meal.name}</h3>
+                          <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">{meal.description}</p>
                         </div>
-                      );
-                    })}
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 7-Day Menu View */}
+            <div>
+              {menu.length === 0 ? (
+                <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
+                  <div className="text-6xl mb-4">🥗</div>
+                  <h3 className="text-xl font-bold text-gray-600">No Weekly Menu Available Yet</h3>
+                  <p className="text-gray-500">Check back later or browse individual snacks.</p>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  {/* Day Navigation Tabs */}
+                  <div className="flex flex-col items-center border-b border-gray-100 pb-6">
+                    <h2 className="text-lg font-bold text-nouriva-green tracking-wider uppercase mb-4">
+                      Weekly Meal Plan
+                    </h2>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {menu.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveDay(idx)}
+                          className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 ${
+                            activeDay === idx
+                              ? 'bg-nouriva-green text-white shadow-md'
+                              : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-100'
+                          }`}
+                        >
+                          Day {idx + 1}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Active Day Cards */}
+                  {menu[activeDay] && (
+                    <div className="grid md:grid-cols-3 gap-8">
+                      {["breakfast", "lunch", "dinner"].map((type) => {
+                        const meal = menu[activeDay][type];
+                        if (!meal) return null;
+                        return (
+                          <div
+                            key={meal.id}
+                            className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-nouriva-green/20 hover:shadow-lg transition duration-300 flex flex-col justify-between"
+                          >
+                            <div>
+                              <p className="bg-nouriva-cream text-xs uppercase font-bold text-gray-500 px-4 py-3 flex justify-between border-b border-gray-50">
+                                <span>{type}</span>
+                                {meal.is_premium && (
+                                  <span className="text-nouriva-gold font-extrabold tracking-wide">
+                                    👑 CLUB
+                                  </span>
+                                )}
+                              </p>
+
+                              <Link to={`/app/meal/${meal.id}`}>
+                                {meal.image ? (
+                                  <img
+                                    src={meal.image}
+                                    alt={meal.name}
+                                    className="w-full h-56 object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-56 bg-gray-50 flex items-center justify-center text-gray-400">No Image</div>
+                                )}
+                                <div className="p-6">
+                                  <h3 className="text-lg font-bold text-nouriva-charcoal hover:text-nouriva-green transition-colors mb-2">
+                                    {meal.name}
+                                  </h3>
+                                  <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed mb-3">{meal.description}</p>
+                                </div>
+                              </Link>
+                            </div>
+                            <div className="px-6 pb-6 pt-2 flex items-center text-xs text-gray-400 border-t border-gray-50 mt-2">
+                              <svg className="w-4 h-4 mr-1.5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              1 serving
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Slide-over Preferences Drawer */}
+      {user && isDrawerOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+          <div className="absolute inset-0 overflow-hidden">
+            {/* Backdrop overlay */}
+            <div 
+              onClick={() => setIsDrawerOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
+            />
+            
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+              <div className="pointer-events-auto w-screen max-w-md transform transition-all duration-300 ease-in-out shadow-2xl">
+                <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl border-l border-gray-100">
+                  <div className="px-6 flex items-center justify-between border-b border-gray-100 pb-4">
+                    <h2 className="text-lg font-bold text-nouriva-green uppercase tracking-wide flex items-center gap-2">
+                      🥑 Customize Taste
+                    </h2>
+                    <button 
+                      onClick={() => setIsDrawerOpen(false)} 
+                      className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
+                    >
+                      <span className="sr-only">Close panel</span>
+                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="relative mt-6 flex-1 px-6 space-y-6">
+                    <div>
+                      <p className="text-gray-500 text-sm leading-relaxed mb-4">
+                        Add ingredients you love (e.g. avocado, chicken, bacon). We'll automatically curate and prioritize recommendations matching your taste.
+                      </p>
+                      
+                      {/* Preferred Tags */}
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {(profile?.preferences?.favorite_ingredients || []).map((fav, idx) => (
+                          <span 
+                            key={idx} 
+                            className="bg-emerald-50 text-nouriva-green border border-emerald-100 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 hover:bg-red-50 hover:text-red-700 hover:border-red-100 transition cursor-pointer" 
+                            onClick={() => removeFavoriteIngredient(fav)}
+                            title="Click to remove"
+                          >
+                            {fav} <span className="text-[10px]">✕</span>
+                          </span>
+                        ))}
+                        {(profile?.preferences?.favorite_ingredients || []).length === 0 && (
+                          <span className="text-gray-400 text-xs italic">No favorite ingredients added yet.</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Input Form */}
+                    <form onSubmit={addFavoriteIngredient} className="space-y-3">
+                      <label className="block text-sm font-semibold text-gray-700">Add Favorite Ingredient</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newFav}
+                          onChange={e => setNewFav(e.target.value)}
+                          placeholder="e.g. avocado"
+                          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-nouriva-green text-gray-800 bg-transparent"
+                        />
+                        <button 
+                          type="submit" 
+                          className="px-4 py-2 bg-nouriva-green hover:bg-emerald-800 text-white rounded-lg text-sm font-bold transition shadow"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
-              ))
-            )}
+              </div>
+            </div>
           </div>
         </div>
       )}

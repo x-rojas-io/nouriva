@@ -28,8 +28,8 @@ function SnackPage() {
   }, []);
 
   if (loading || authLoading) return (
-    <div className="min-h-screen bg-lime-50 px-4 py-8">
-      <h1 className="text-3xl font-bold text-center text-emerald-700 mb-8">
+    <div className="min-h-screen bg-nouriva-cream px-4 py-8">
+      <h1 className="text-3xl font-black text-center text-nouriva-green uppercase tracking-tight mb-8">
         Healthy Snacks
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -43,21 +43,21 @@ function SnackPage() {
   // 🔒 Club Exclusive Logic
   if (!isPremium) {
     return (
-      <div className="min-h-screen bg-lime-50 px-4 py-12 flex items-center justify-center">
-        <div className="max-w-lg w-full bg-white p-8 rounded-2xl shadow-xl text-center border-t-4 border-nouriva-gold">
+      <div className="min-h-screen bg-nouriva-cream px-4 py-12 flex items-center justify-center">
+        <div className="max-w-lg w-full bg-white p-8 rounded-3xl shadow-xl text-center border-t-4 border-nouriva-gold">
           <div className="text-6xl mb-6">🥑</div>
-          <h2 className="text-3xl font-bold text-emerald-800 mb-4">Club Exclusive Snacks</h2>
+          <h2 className="text-3xl font-bold text-nouriva-green mb-4">Club Exclusive Snacks</h2>
           <p className="text-gray-600 mb-8 text-lg">
             Our curated list of healthy, keto-friendly snacks is exclusively available to <strong>Nouriva Club</strong> members.
           </p>
 
-          <div className="bg-emerald-50 p-4 rounded-lg mb-8 text-sm text-emerald-700">
+          <div className="bg-emerald-50/20 p-4 rounded-xl mb-8 text-sm text-nouriva-green font-medium">
             Join 1,000+ members enjoying guilt-free snacking.
           </div>
 
           <Link
             to="/app/subscribe"
-            className="block w-full py-4 px-6 rounded-lg bg-nouriva-gold text-emerald-900 font-bold hover:bg-yellow-500 transition shadow-lg text-xl"
+            className="block w-full py-4 px-6 rounded-xl bg-nouriva-gold text-white font-bold hover:bg-yellow-600 transition shadow-lg text-xl"
           >
             Unlock Snacks (Free)
           </Link>
@@ -68,10 +68,10 @@ function SnackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-lime-50 px-4 py-8">
-      <h1 className="text-3xl font-bold text-center text-emerald-700 mb-8">
+    <div className="min-h-screen bg-nouriva-cream px-4 py-8 text-nouriva-charcoal">
+      <h1 className="text-3xl font-black text-center text-nouriva-green uppercase tracking-tight mb-8">
         Healthy Snacks
-        <span className="ml-3 bg-nouriva-gold text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide shadow-sm align-middle">
+        <span className="ml-3 bg-nouriva-gold text-white text-[10px] px-2.5 py-1 rounded-full font-bold tracking-wide shadow-sm align-middle">
           👑 CLUB EXCLUSIVE
         </span>
       </h1>
@@ -79,21 +79,21 @@ function SnackPage() {
         {snacks.map((snack) => (
           <div
             key={snack.id}
-            className="bg-white shadow rounded overflow-hidden cursor-pointer hover:shadow-md transition"
+            className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-nouriva-green/20 hover:shadow-lg transition duration-300 cursor-pointer"
             onClick={() => navigate(`/app/meal/${snack.id}`)}
           >
             {snack.image && (
               <img
                 src={snack.image}
                 alt={snack.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-56 object-cover"
               />
             )}
-            <div className="p-4">
-              <h2 className="text-xl font-semibold text-emerald-600 flex items-center gap-2">
+            <div className="p-6">
+              <h2 className="text-xl font-bold text-nouriva-charcoal hover:text-nouriva-green transition-colors mb-2">
                 {snack.name}
               </h2>
-              <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+              <p className="text-sm text-gray-500">
                 {Object.keys(snack.ingredients).length} ingredients
               </p>
             </div>

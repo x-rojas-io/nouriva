@@ -83,14 +83,14 @@ function AdminRecipeList() {
             {/* Desktop: Table */}
             <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
                 <table className="w-full text-left border-collapse">
-                    <thead className="bg-lime-50 border-b border-lime-100">
+                    <thead className="bg-nouriva-cream border-b border-gray-100">
                         <tr>
 
-                            <th className="p-4 font-bold text-emerald-700">Image</th>
-                            <th className="p-4 font-bold text-emerald-700">Name</th>
-                            <th className="p-4 font-bold text-emerald-700">Type</th>
-                            <th className="p-4 font-bold text-emerald-700">Premium</th>
-                            <th className="p-4 font-bold text-emerald-700 text-right">Actions</th>
+                            <th className="p-4 font-bold text-nouriva-green">Image</th>
+                            <th className="p-4 font-bold text-nouriva-green">Name</th>
+                            <th className="p-4 font-bold text-nouriva-green">Type</th>
+                            <th className="p-4 font-bold text-nouriva-green">Premium</th>
+                            <th className="p-4 font-bold text-nouriva-green text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -141,7 +141,7 @@ function NewsletterTool() {
                     <button
                         onClick={handleGenerate}
                         disabled={generating || loading || recipes.length === 0}
-                        className="w-full py-4 bg-emerald-700 text-white rounded-xl font-bold shadow-lg hover:bg-emerald-800 transition flex justify-center items-center gap-2"
+                        className="w-full py-4 bg-nouriva-green text-white rounded-xl font-bold shadow-lg hover:bg-nouriva-green/90 transition flex justify-center items-center gap-2"
                     >
                         {generating ? (
                             <><span>⚙️</span> Writing Draft...</>

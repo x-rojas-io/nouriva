@@ -34,7 +34,7 @@ function SnackDetails() {
   }, [snackId]);
 
   if (loading || authLoading) return (
-    <div className="text-center mt-10 text-lg text-amber-700">
+    <div className="text-center mt-10 text-lg text-nouriva-green">
       Loading snack details...
     </div>
   );
@@ -48,15 +48,15 @@ function SnackDetails() {
   const isLocked = snack.is_premium && !isPremium;
 
   return (
-    <div className="min-h-screen bg-lime-50 text-gray-800 p-8">
+    <div className="min-h-screen bg-nouriva-cream text-nouriva-charcoal p-8">
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="text-emerald-600 font-medium hover:underline"
+          className="text-nouriva-green font-medium hover:underline"
         >
           ← Back
         </button>
-        <h1 className="text-2xl font-bold text-center text-emerald-700 flex-grow">
+        <h1 className="text-2xl font-bold text-center text-nouriva-green flex-grow">
           {snack.name}
           {snack.is_premium && <span className="ml-2 text-xs bg-nouriva-gold text-white px-2 py-1 rounded-full align-middle">PRO</span>}
         </h1>
@@ -66,7 +66,7 @@ function SnackDetails() {
       {isLocked ? (
         <PremiumLock title={snack.name} />
       ) : (
-        <div className="md:flex md:gap-6 bg-white border-l-4 border-emerald-500 p-6 rounded shadow">
+        <div className="md:flex md:gap-6 bg-white border-l-4 border-nouriva-green p-6 rounded-2xl shadow">
           {snack.image && (
             <img
               src={snack.image}
@@ -75,7 +75,7 @@ function SnackDetails() {
             />
           )}
           <div className="flex-1">
-            <h2 className="text-lg font-semibold text-amber-600 mb-2">
+            <h2 className="text-lg font-semibold text-nouriva-gold mb-2">
               Ingredients
             </h2>
             <ul className="list-disc pl-5 text-sm text-gray-700 mb-4">
@@ -86,7 +86,7 @@ function SnackDetails() {
               ))}
             </ul>
 
-            <h2 className="text-lg font-semibold text-amber-600 mb-2">
+            <h2 className="text-lg font-semibold text-nouriva-gold mb-2">
               Steps
             </h2>
             <div className="space-y-2">
