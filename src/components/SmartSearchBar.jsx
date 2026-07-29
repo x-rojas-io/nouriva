@@ -1,14 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function SmartSearchBar({ onSearch, loading }) {
     const [query, setQuery] = useState('');
+    const debounceTimerRef = useRef(null);
+
+    const handleChange = (e) => {
+        const val = e.target.value;
+        setQuery(val);
+
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+        }
+
+        debounceTimerRef.current = setTimeout(() => {
+            onSearch(val);
+        }, 250);
+    };
+
+    const handleClear = () => {
+        setQuery('');
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+        }
+        onSearch('');
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (query.trim()) {
-            onSearch(query);
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
         }
+        onSearch(query);
     };
+
+    // Clean up on unmount
+    useEffect(() => {
+        return () => {
+            if (debounceTimerRef.current) {
+                clearTimeout(debounceTimerRef.current);
+            }
+        };
+    }, []);
 
     return (
         <form onSubmit={handleSubmit} className="relative max-w-2xl mx-auto mb-8">
@@ -16,15 +48,13 @@ function SmartSearchBar({ onSearch, loading }) {
                 <input
                     type="text"
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Ask for something... (e.g. 'Healthy breakfast with avocado')"
-                    className="w-full px-6 py-4 rounded-full border-2 border-emerald-100 focus:border-nouriva-green focus:outline-none shadow-sm text-lg pr-12"
-                    disabled={loading}
+                    onChange={handleChange}
+                    placeholder="Search recipes or snacks..."
+                    className="w-full px-6 py-4 rounded-full border-2 border-emerald-100 focus:border-nouriva-green focus:outline-none shadow-sm text-lg pr-12 text-gray-800"
                 />
                 <button
                     type="submit"
-                    disabled={loading}
-                    className="absolute right-2 top-2 p-2 bg-nouriva-green text-white rounded-full hover:bg-emerald-800 transition disabled:opacity-50"
+                    className="absolute right-2 top-2 p-2 bg-nouriva-green text-white rounded-full hover:bg-emerald-800 transition"
                 >
                     {loading ? (
                         <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -41,7 +71,7 @@ function SmartSearchBar({ onSearch, loading }) {
             {query && (
                 <button
                     type="button"
-                    onClick={() => { setQuery(''); onSearch(''); }}
+                    onClick={handleClear}
                     className="absolute -right-24 top-4 text-gray-400 hover:text-gray-600 text-sm hidden md:block"
                 >
                     Clear Search

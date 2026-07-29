@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/AuthContext";
 import { useToast } from "../lib/ToastContext";
-import { understandRecipeQuery } from "../lib/gemini";
 import SmartSearchBar from "../components/SmartSearchBar";
 import SmartRecipeGenerator from "../components/SmartRecipeGenerator";
 import RecipeCardSkeleton from "../components/RecipeCardSkeleton";
@@ -53,62 +52,27 @@ function HomePage() {
   }, []);
 
   const handleSearch = async (query) => {
-    setSearchQuery(query);
-    if (!query.trim()) {
+    const cleaned = query.trim();
+    setSearchQuery(cleaned);
+
+    // If query is empty or less than 5 characters, immediately reset to default view
+    if (cleaned.length < 5) {
       setSearchResults(null);
       return;
     }
 
     setIsSearching(true);
     try {
-      // 1. Understand Intent
-      const params = await understandRecipeQuery(query);
-      console.log("Search Params:", params);
-
-      // 2. Fetch Candidates (Broad search first, filter later for complex JSON)
-      let dbQuery = supabase.from('recipes').select('*');
-
-      // Strict Type Filter
-      if (params.type && params.type !== 'any') {
-        dbQuery = dbQuery.eq('type', params.type);
-      }
-
-      // Text Search (Name)
-      if (params.text_search) {
-        dbQuery = dbQuery.ilike('name', `%${params.text_search}%`);
-      }
-
-      const { data, error } = await dbQuery;
+      // Direct, fast database search on recipes table
+      const { data, error } = await supabase
+        .from('recipes')
+        .select('*')
+        .or(`name.ilike.%${cleaned}%,description.ilike.%${cleaned}%,type.ilike.%${cleaned}%`);
 
       if (error) throw error;
-
-      // 3. Client-Side Filtering (Exclusions/Inclusions match)
-      let finalResults = data || [];
-
-      // Exclusions (e.g. "no eggs")
-      if (params.exclude_ingredients && params.exclude_ingredients.length > 0) {
-        finalResults = finalResults.filter(recipe => {
-          const recipeIngredients = JSON.stringify(recipe.ingredients || {}).toLowerCase();
-          // Check if ANY excluded ingredient is present
-          const hasExcluded = params.exclude_ingredients.some(ex => recipeIngredients.includes(ex.toLowerCase()));
-          return !hasExcluded;
-        });
-      }
-
-      // Inclusions (e.g. "with avocado") - Only if not already covered by text search
-      if (params.include_ingredients && params.include_ingredients.length > 0) {
-        finalResults = finalResults.filter(recipe => {
-          const recipeIngredients = JSON.stringify(recipe.ingredients || {}).toLowerCase();
-          // Check if ALL included ingredients are present
-          return params.include_ingredients.every(inc => recipeIngredients.includes(inc.toLowerCase()));
-        });
-      }
-
-      setSearchResults(finalResults);
-
+      setSearchResults(data || []);
     } catch (err) {
       console.error("Search failed:", err);
-      toast.error("Search failed. See console.");
     } finally {
       setIsSearching(false);
     }
@@ -164,14 +128,20 @@ function HomePage() {
 
       <SmartSearchBar onSearch={handleSearch} loading={isSearching} />
 
-      {searchQuery ? (
+      {searchQuery && searchQuery.length >= 5 ? (
         // --- SEARCH RESULTS VIEW ---
         <div>
           <h2 className="text-2xl font-bold text-gray-700 mb-6">
-            Results for "{searchQuery}" <span className="text-sm font-normal text-gray-500">({searchResults?.length || 0} found)</span>
+            Results for "{searchQuery}" {!isSearching && <span className="text-sm font-normal text-gray-500">({searchResults?.length || 0} found)</span>}
           </h2>
 
-          {searchResults && searchResults.length > 0 ? (
+          {isSearching ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              <RecipeCardSkeleton />
+              <RecipeCardSkeleton />
+              <RecipeCardSkeleton />
+            </div>
+          ) : searchResults && searchResults.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-6">
               {searchResults.map(meal => (
                 <div key={meal.id} className="bg-white rounded-xl shadow overflow-hidden transform hover:scale-105 transition duration-200">
