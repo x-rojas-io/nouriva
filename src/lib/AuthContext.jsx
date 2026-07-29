@@ -22,7 +22,15 @@ export const AuthProvider = ({ children }) => {
         const initAuth = async () => {
             try {
                 setSessionLoading(true);
-                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                // Add a 4-second timeout fail-safe to prevent getSession from hanging forever
+                const getSessionPromise = supabase.auth.getSession();
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Session retrieval timed out (4s)')), 4000)
+                );
+
+                const result = await Promise.race([getSessionPromise, timeoutPromise]);
+                const session = result?.data?.session ?? null;
 
                 setUser(session?.user ?? null);
 
@@ -32,7 +40,7 @@ export const AuthProvider = ({ children }) => {
                     fetchProfile(session.user.id, session.user);
                 }
             } catch (e) {
-                console.error("AuthContext: getSession CRASH", e);
+                console.error("AuthContext: initAuth fail-safe triggered:", e.message || e);
             } finally {
                 // UNBLOCK APP RENDER IMMEDIATELY
                 setSessionLoading(false);

@@ -11,8 +11,12 @@ export function ToastProvider({ children }) {
     const [toasts, setToasts] = useState([]);
 
     const addToast = useCallback((message, type = 'info', opts = {}) => {
-        const id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + Math.random().toString(36).substring(2);
-        setToasts(prev => [...prev, { id, message, type, ...opts }]);
+        const id = opts.id || (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + Math.random().toString(36).substring(2));
+
+        setToasts(prev => {
+            if (prev.some(t => t.id === id)) return prev; // Prevent duplicates
+            return [...prev, { ...opts, id, message, type }];
+        });
         return id;
     }, []);
 
@@ -26,9 +30,11 @@ export function ToastProvider({ children }) {
         error: (msg, opts) => addToast(msg, 'error', opts),
         info: (msg, opts) => addToast(msg, 'info', opts),
         loading: (msg, opts) => {
-            // For loading, we want to return the ID so it can be dismissed
-            const id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + Math.random().toString(36).substring(2);
-            setToasts(prev => [...prev, { id, message: msg, type: 'info', isLoading: true, ...opts }]);
+            const id = opts?.id || (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + Math.random().toString(36).substring(2));
+            setToasts(prev => {
+                if (prev.some(t => t.id === id)) return prev;
+                return [...prev, { ...opts, id, message: msg, type: 'info', isLoading: true }];
+            });
             return id;
         },
         dismiss: (id) => {

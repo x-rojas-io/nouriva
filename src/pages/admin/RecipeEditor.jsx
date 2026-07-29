@@ -76,16 +76,57 @@ function RecipeEditor() {
 
     // --- AI Magic Fill Handler ---
     const handleMagicFill = async () => {
-        if (!formData.name) return toast.error("Please enter a Recipe Name first!");
+        if (!formData.name) return toast.error("Please enter a Recipe Name or Description!");
 
         setMagicFilling(true);
         try {
+            // 1. Understand Intent (Extract "Searchable Name" from natural language)
+            const { understandRecipeQuery } = await import('../../lib/gemini');
+            const searchData = await understandRecipeQuery(formData.name);
+            console.log("AI Search Intent:", searchData);
+
+            const searchTerm = searchData.text_search || formData.name;
+
+            // 2. Check Database for Existing Recipe
+            // Try ILIKE match on name. 
+            // We use the extracted 'text_search' which cleans up "I want..." to just "chicken"
+            const { data: existingRecipe } = await supabase
+                .from('recipes')
+                .select('*')
+                .ilike('name', `%${searchTerm}%`)
+                .limit(1)
+                .maybeSingle();
+
+            if (existingRecipe) {
+                toast.success(`Found existing recipe: ${existingRecipe.name}`);
+
+                // Auto-Load Existing
+                setFormData({
+                    ...existingRecipe,
+                    steps: existingRecipe.steps || ['']
+                });
+                setPreviewUrl(existingRecipe.image || '');
+
+                if (existingRecipe.ingredients) {
+                    const list = Object.entries(existingRecipe.ingredients).map(([name, val]) => ({
+                        name, quantity: val.quantity, unit: val.unit
+                    }));
+                    if (list.length === 0) list.push({ name: '', quantity: '', unit: '' });
+                    setIngredientList(list);
+                }
+
+                setMagicFilling(false);
+                return; // STOP HERE
+            }
+
+            // 3. No match found? Generate New Recipe
             // Use Name + Description as the Prompt Context
             const recipeData = await generateFullRecipe(formData.name, formData.description || "Strict Keto");
 
             // Populate Form
             setFormData(prev => ({
                 ...prev,
+                name: recipeData.name || searchTerm, // Use AI generated name if available
                 type: recipeData.type || 'dinner',
                 is_premium: recipeData.is_premium || false,
                 description: recipeData.description || '',
@@ -94,14 +135,21 @@ function RecipeEditor() {
 
             // Handle Generated Image
             if (recipeData.image) {
-                setPreviewUrl(recipeData.image);
                 // Convert URL to Blob for upload
                 try {
-                    const res = await fetch(recipeData.image);
+                    const res = await fetch(recipeData.image, { referrerPolicy: 'no-referrer' });
+                    if (!res.ok) throw new Error(`Image service returned ${res.status}`);
+
                     const blob = await res.blob();
                     setImageFile(blob);
+                    setPreviewUrl(recipeData.image); // Only show if valid
                 } catch (imgErr) {
                     console.error("Failed to fetch generated image blob:", imgErr);
+                    toast.error("Could not download image locally. Using remote link.");
+                    // Fallback: Use the remote URL directly
+                    setPreviewUrl(recipeData.image);
+                    setFormData(prev => ({ ...prev, image: recipeData.image }));
+                    setImageFile(null);
                 }
             }
 
@@ -343,7 +391,7 @@ function RecipeEditor() {
                             <div className="w-full h-48 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center border border-gray-300 shadow-inner relative group">
                                 {previewUrl ? (
                                     <>
-                                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all"></div>
                                     </>
                                 ) : (

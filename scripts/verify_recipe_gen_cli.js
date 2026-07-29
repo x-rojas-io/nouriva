@@ -9,7 +9,7 @@ if (!API_KEY) {
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
-const FALLBACK_MODELS = ["gemini-3-flash-preview", "gemini-2.0-flash-exp", "gemini-1.5-flash"];
+const FALLBACK_MODELS = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.1-flash-lite"];
 
 async function generateSafe(promptText, config = {}) {
     let lastError = null;
@@ -59,7 +59,7 @@ async function generateFullRecipe(title, description = '') {
         `;
 
         console.log("Generating recipe...");
-        const result = await generateSafe(prompt, { responseMimeType: "application/json" });
+        const result = await generateSafe(prompt, { response_mime_type: "application/json" });
         const text = result.text;
 
         console.log("Raw Response Length:", text.length);
