@@ -17,6 +17,9 @@ function Navbar() {
         <div className="hidden md:flex gap-4 items-center">
           <Link to="/app/home" className="text-gray-600 hover:text-nouriva-green font-medium">Recipes</Link>
           <Link to="/app/snack" className="text-gray-600 hover:text-nouriva-green font-medium">Snacks</Link>
+          {user && (
+            <Link to="/app/my-recipes" className="text-gray-600 hover:text-nouriva-green font-medium">My Recipes</Link>
+          )}
           {!isPremium && (
             <Link to="/app/subscribe" className="text-nouriva-gold hover:text-yellow-600 font-bold">Join Club</Link>
           )}
@@ -85,6 +88,9 @@ function Navbar() {
         <div className="absolute top-full left-0 w-full bg-white shadow-lg border-t md:hidden flex flex-col p-4 space-y-4">
           <Link to="/app/home" className="text-gray-600 hover:text-nouriva-green font-medium text-lg" onClick={() => setIsOpen(false)}>Recipes</Link>
           <Link to="/app/snack" className="text-gray-600 hover:text-nouriva-green font-medium text-lg" onClick={() => setIsOpen(false)}>Snacks</Link>
+          {user && (
+            <Link to="/app/my-recipes" className="text-gray-600 hover:text-nouriva-green font-medium text-lg" onClick={() => setIsOpen(false)}>My Recipes</Link>
+          )}
           {!isPremium && (
             <Link to="/app/subscribe" className="text-nouriva-gold hover:text-yellow-600 font-medium text-lg" onClick={() => setIsOpen(false)}>Join Club</Link>
           )}

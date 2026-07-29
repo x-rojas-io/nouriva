@@ -10,6 +10,7 @@ import SnackDetails from "./pages/SnackDetails";
 import MealPage from "./pages/MealPage";
 import AboutPage from "./pages/AboutPage";
 import PricingPage from "./pages/PricingPage";
+import MyRecipesPage from "./pages/MyRecipesPage";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -41,6 +42,9 @@ function App() {
             <Route path="meal/:mealId" element={<MealPage />} />
             <Route path="snack/:snackId" element={<SnackDetails />} />
             <Route path="subscribe" element={<PricingPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="my-recipes" element={<MyRecipesPage />} />
+            </Route>
             <Route path="*" element={<Navigate to="home" replace />} />
           </Routes>
         </MainLayout>

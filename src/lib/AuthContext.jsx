@@ -128,9 +128,17 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const refreshProfile = () => {
+        if (user) {
+            setProfileLoading(true);
+            fetchProfile(user.id, user);
+        }
+    };
+
     const value = {
         user,
         profile,
+        refreshProfile,
         userRole, // 'standard', 'premium', 'admin'
         isAdmin: userRole === 'admin',
         isPremium: userRole === 'premium' || userRole === 'admin', // Admins get premium features

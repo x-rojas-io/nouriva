@@ -134,6 +134,15 @@ async function autoHealModel(failedModel) {
     }
 }
 
+function isTransientUnavailableError(error) {
+    if (!error) return false;
+    const errMsg = (error.message || String(error)).toLowerCase();
+    return errMsg.includes('503') || 
+           errMsg.includes('unavailable') || 
+           errMsg.includes('high demand') ||
+           errMsg.includes('overloaded');
+}
+
 /**
  * Helper to execute prompts with dynamic fallback and auto-healing.
  */
@@ -169,8 +178,27 @@ async function generateSafe(promptText, config = {}) {
                 console.error("Auto-healing/retry failed:", healErr);
                 throw error; // Return original deprecation error if healing fails
             }
+        } else if (isTransientUnavailableError(error)) {
+            try {
+                console.warn(`Model ${modelName} is unavailable (503). Attempting temporary fallback...`);
+                const fallbackModels = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-2.0-flash'];
+                const fallback = fallbackModels.find(m => m !== modelName) || 'gemini-3.5-flash';
+                
+                console.log(`Retrying generation with temporary fallback model: ${fallback}`);
+                const retryResponse = await ai.models.generateContent({
+                    model: fallback,
+                    contents: promptText,
+                    config: config
+                });
+
+                if (!retryResponse) throw new Error("Empty response on fallback retry");
+                return retryResponse;
+            } catch (fallbackErr) {
+                console.error("Temporary fallback retry failed:", fallbackErr);
+                throw error; // Return original 503 error if fallback also fails
+            }
         } else {
-            // Bubble up transient network/quota errors immediately
+            // Bubble up other errors immediately
             throw error;
         }
     }

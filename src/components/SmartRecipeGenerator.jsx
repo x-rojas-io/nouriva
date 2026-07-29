@@ -16,8 +16,9 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
     const [prompt, setPrompt] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const [isCheckingQuota, setIsCheckingQuota] = useState(false);
 
-    const handleOpen = () => {
+    const handleOpen = async () => {
         if (!user) {
             toast.error("Please sign in or create an account to use the AI Chef! 🪄");
             navigate('/login');
@@ -25,6 +26,28 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
         }
         setErrorMsg('');
         setIsOpen(true);
+        setIsCheckingQuota(true);
+
+        try {
+            const startOfToday = new Date();
+            startOfToday.setHours(0, 0, 0, 0);
+
+            const { count, error } = await supabase
+                .from('recipes')
+                .select('id', { count: 'exact', head: true })
+                .eq('created_by', user.id)
+                .gte('created_at', startOfToday.toISOString());
+
+            if (error) throw error;
+
+            if (count && count >= 1) {
+                setErrorMsg("You have reached your daily limit of 1 AI Chef recipe per day. Please check back tomorrow! 🍳");
+            }
+        } catch (err) {
+            console.error("Failed to run chef daily quota check:", err);
+        } finally {
+            setIsCheckingQuota(false);
+        }
     };
 
     const handleClose = () => {
@@ -41,6 +64,24 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
         if (!cleanedPrompt) {
             setErrorMsg("Please tell the chef what you're in the mood for!");
             return;
+        }
+
+        // Check quota again on submit to ensure no bypass
+        try {
+            const startOfToday = new Date();
+            startOfToday.setHours(0, 0, 0, 0);
+            const { count, error } = await supabase
+                .from('recipes')
+                .select('id', { count: 'exact', head: true })
+                .eq('created_by', user.id)
+                .gte('created_at', startOfToday.toISOString());
+            if (error) throw error;
+            if (count && count >= 1) {
+                setErrorMsg("You have reached your daily limit of 1 AI Chef recipe per day. Please check back tomorrow! 🍳");
+                return;
+            }
+        } catch (quotaErr) {
+            console.error("Quota validation failed:", quotaErr);
         }
 
         // 1. Client-Side Pre-Screening (Fail Fast)
@@ -118,6 +159,7 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
                 is_premium: true, // All AI Chef recipes are premium by default
                 steps: recipeData.steps || [],
                 ingredients: recipeData.ingredients || {},
+                created_by: user.id, // Reference to creator profile
             };
 
             // 6. Save to Database
@@ -140,7 +182,32 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
         } catch (error) {
             console.error("AI Chef Error:", error);
             if (toastId) toast.dismiss(toastId);
-            setErrorMsg(error.message || String(error));
+            
+            // Format and display a user-friendly error message
+            let rawMsg = error.message || String(error);
+            if (rawMsg.trim().startsWith('{') && rawMsg.trim().endsWith('}')) {
+                try {
+                    const parsed = JSON.parse(rawMsg);
+                    if (parsed.error && parsed.error.message) {
+                        rawMsg = parsed.error.message;
+                    }
+                } catch (e) {
+                    // Ignore JSON parsing failure
+                }
+            }
+            
+            const lowerMsg = rawMsg.toLowerCase();
+            let friendlyMsg = rawMsg;
+            
+            if (lowerMsg.includes('503') || lowerMsg.includes('unavailable') || lowerMsg.includes('high demand') || lowerMsg.includes('overloaded')) {
+                friendlyMsg = "The AI Chef is currently busy preparing many meals (temporary high demand). Please wait a moment and click Generate Recipe again! 🍳";
+            } else if (lowerMsg.includes('429') || lowerMsg.includes('rate limit') || lowerMsg.includes('quota')) {
+                friendlyMsg = "You've exceeded the speed limit! Please wait a minute before asking the AI Chef for another recipe. ⏱️";
+            } else if (lowerMsg.includes('row-level security') || lowerMsg.includes('rls') || lowerMsg.includes('new row violates')) {
+                friendlyMsg = "Database permission connection issue. Please verify your internet connection or try again.";
+            }
+            
+            setErrorMsg(friendlyMsg);
         } finally {
             setIsGenerating(false);
         }
@@ -185,8 +252,13 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 flex-1 overflow-y-auto">
-                    {isGenerating ? (
+                <div className="p-6 flex-1 overflow-y-auto text-gray-800">
+                    {isCheckingQuota ? (
+                        <div className="text-center py-12 space-y-4">
+                            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-600 mx-auto"></div>
+                            <h3 className="text-lg font-medium text-emerald-800">Checking daily chef quota...</h3>
+                        </div>
+                    ) : isGenerating ? (
                         <div className="text-center py-12 space-y-4">
                             <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-emerald-600 mx-auto"></div>
                             <h3 className="text-xl font-bold text-emerald-800">Creating your masterpiece...</h3>
@@ -198,32 +270,38 @@ export default function SmartRecipeGenerator({ onRecipeCreated }) {
                                 <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm flex gap-3 items-start animate-fadeIn">
                                     <span className="text-xl">⚠️</span>
                                     <div className="flex-1">
-                                        <h4 className="font-bold text-red-900">Safety & Validation Alert</h4>
+                                        <h4 className="font-bold text-red-900">
+                                            {errorMsg.includes("daily limit") ? "Chef Quota Alert" : "Safety & Validation Alert"}
+                                        </h4>
                                         <p className="mt-1 text-red-700 leading-relaxed">{errorMsg}</p>
                                     </div>
                                 </div>
                             )}
 
-                            <label className="block text-lg font-medium text-gray-700">What are you in the mood for?</label>
-                            <textarea
-                                value={prompt}
-                                onChange={(e) => {
-                                    setPrompt(e.target.value);
-                                    if (errorMsg) setErrorMsg('');
-                                }}
-                                placeholder="I want a spicy beef steak with asparagus..."
-                                className="w-full h-32 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none text-lg"
-                                autoFocus
-                            />
-                            <div className="text-sm text-gray-500">
-                                💡 Tip: Be specific! Mention ingredients you love or want to avoid.
-                            </div>
-                            <button
-                                onClick={handleGenerate}
-                                className="w-full py-4 bg-emerald-600 text-white text-xl font-bold rounded-xl hover:bg-emerald-700 transition shadow-lg flex justify-center items-center gap-2"
-                            >
-                                Generate Recipe 🪄
-                            </button>
+                            {!errorMsg.includes("daily limit") && (
+                                <>
+                                    <label className="block text-lg font-medium text-gray-700">What are you in the mood for?</label>
+                                    <textarea
+                                        value={prompt}
+                                        onChange={(e) => {
+                                            setPrompt(e.target.value);
+                                            if (errorMsg) setErrorMsg('');
+                                        }}
+                                        placeholder="I want a spicy beef steak with asparagus..."
+                                        className="w-full h-32 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none text-lg text-gray-800"
+                                        autoFocus
+                                    />
+                                    <div className="text-sm text-gray-500">
+                                        💡 Tip: Be specific! Mention ingredients you love or want to avoid.
+                                    </div>
+                                    <button
+                                        onClick={handleGenerate}
+                                        className="w-full py-4 bg-emerald-600 text-white text-xl font-bold rounded-xl hover:bg-emerald-700 transition shadow-lg flex justify-center items-center gap-2"
+                                    >
+                                        Generate Recipe 🪄
+                                    </button>
+                                </>
+                            )}
                         </div>
                     )}
                 </div>
