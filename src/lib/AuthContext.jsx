@@ -143,11 +143,12 @@ export const AuthProvider = ({ children }) => {
                 redirectTo: window.location.origin
             }
         }),
-        signOut: () => {
+        signOut: async () => {
             setUserRole('guest');
             setIsAdmin(false);
             setProfile(null);
-            supabase.auth.signOut();
+            await supabase.auth.signOut();
+            window.location.href = '/';
         },
         // DEV ONLY: Bypass Auth
         devLogin: () => {

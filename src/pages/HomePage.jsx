@@ -28,10 +28,13 @@ function HomePage() {
         return;
       }
 
+      // Filter out premium recipes if the user is not signed in (guest)
+      const filteredData = user ? data : data.filter(r => !r.is_premium);
+
       // Group into days (Breakfast + Lunch + Dinner)
-      const breakfasts = data.filter(r => r.type === 'breakfast');
-      const lunches = data.filter(r => r.type === 'lunch');
-      const dinners = data.filter(r => r.type === 'dinner');
+      const breakfasts = filteredData.filter(r => r.type === 'breakfast');
+      const lunches = filteredData.filter(r => r.type === 'lunch');
+      const dinners = filteredData.filter(r => r.type === 'dinner');
 
       const maxDays = Math.min(breakfasts.length, lunches.length, dinners.length);
       const newMenu = [];
@@ -49,7 +52,7 @@ function HomePage() {
     }
 
     fetchMenu();
-  }, []);
+  }, [user]);
 
   const handleSearch = async (query) => {
     const cleaned = query.trim();
@@ -70,7 +73,9 @@ function HomePage() {
         .or(`name.ilike.%${cleaned}%,description.ilike.%${cleaned}%,type.ilike.%${cleaned}%`);
 
       if (error) throw error;
-      setSearchResults(data || []);
+      const results = data || [];
+      const filteredResults = user ? results : results.filter(r => !r.is_premium);
+      setSearchResults(filteredResults);
     } catch (err) {
       console.error("Search failed:", err);
     } finally {
